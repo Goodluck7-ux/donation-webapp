@@ -44,7 +44,7 @@ export function useUpdateUserRole() {
 export function useCreateCampaign() {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: (data: { title: string; description: string; goalAmount: number; organizationId: string; imageUrl?: string }) =>
+        mutationFn: (data: { title: string; description: string; goalAmount: number; organizationId: string; imageUrl?: string; category: string }) =>
             apiFetch('/campaigns', { method: 'POST', body: JSON.stringify(data) }),
         onSuccess: () => queryClient.invalidateQueries({ queryKey: ['admin-campaigns'] }),
     });

@@ -19,6 +19,7 @@ export default function NewCampaignPage() {
     const [preview, setPreview] = useState<string | null>(null);
     const [uploading, setUploading] = useState(false);
     const [error, setError] = useState('');
+    const [category, setCategory] = useState('EDUCATION');
 
     function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
         const file = e.target.files?.[0];
@@ -45,8 +46,7 @@ export default function NewCampaignPage() {
                 setUploading(false);
             }
 
-            await createCampaign.mutateAsync({ title, description, goalAmount, organizationId, imageUrl });
-            router.push('/admin/campaigns');
+            await createCampaign.mutateAsync({ title, description, goalAmount, organizationId, category, imageUrl }); router.push('/admin/campaigns');
         } catch (err) {
             setUploading(false);
             setError((err as Error).message);
@@ -109,6 +109,22 @@ export default function NewCampaignPage() {
                             onChange={(e) => setGoalAmount(Number(e.target.value))}
                             className="w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm outline-none focus:ring-2 focus:ring-emerald-600"
                         />
+                    </div>
+
+                    <div className="space-y-1.5">
+                        <label className="text-sm font-medium text-neutral-700">Category</label>
+                        <select
+                            required
+                            value={category}
+                            onChange={(e) => setCategory(e.target.value)}
+                            className="w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm outline-none focus:ring-2 focus:ring-emerald-600"
+                        >
+                            <option value="EDUCATION">Education</option>
+                            <option value="CLEAN_WATER">Clean Water</option>
+                            <option value="ENVIRONMENT">Environment</option>
+                            <option value="HEALTH">Health</option>
+                            <option value="EMERGENCY_RELIEF">Emergency Relief</option>
+                        </select>
                     </div>
 
                     <div className="space-y-1.5">

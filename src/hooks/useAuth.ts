@@ -29,9 +29,9 @@ export function useLogin() {
 export function useForgotPassword() {
     return useMutation({
         mutationFn: (data: { email: string }) =>
-            apiFetch<{ status: boolean }>('/api/auth/forget-password', {
+            apiFetch<{ status: boolean }>('/api/auth/request-password-reset', {
                 method: 'POST',
-                body: JSON.stringify({ ...data, redirectTo: '/reset-password' }),
+                body: JSON.stringify({ ...data, redirectTo: 'http://localhost:3001/reset-password' }),
             }),
     });
 }

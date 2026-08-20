@@ -1,10 +1,18 @@
 'use client';
 
 import Link from 'next/link';
-import { useAllCampaigns } from '@/hooks/useAdmin';
+import { useAllCampaigns, useUpdateCampaignStatus } from '@/hooks/useAdmin';
+
+const NEXT_STATUS: Record<string, string> = {
+    DRAFT: 'SUBMITTED',
+    SUBMITTED: 'UNDER_REVIEW',
+    UNDER_REVIEW: 'APPROVED',
+    APPROVED: 'ACTIVE',
+};
 
 export default function AdminCampaignsPage() {
     const { data: campaigns, isLoading } = useAllCampaigns();
+    const updateStatus = useUpdateCampaignStatus();
 
     return (
         <div className="p-6 sm:p-10 max-w-5xl mx-auto space-y-8">
@@ -21,7 +29,7 @@ export default function AdminCampaignsPage() {
             {isLoading && <p className="text-sm text-neutral-400">Loading…</p>}
 
             <div className="bg-white border border-neutral-200 rounded-xl overflow-hidden overflow-x-auto">
-                <table className="w-full text-sm min-w-[560px]">
+                <table className="w-full text-sm min-w-[640px]">
                     <thead className="bg-neutral-50 text-left text-xs uppercase text-neutral-500">
                         <tr>
                             <th className="p-4">Campaign</th>
@@ -38,12 +46,18 @@ export default function AdminCampaignsPage() {
                                     <span className="px-2 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-medium">{c.status}</span>
                                 </td>
                                 <td className="p-4 text-neutral-600">₦{Number(c.currentAmount).toLocaleString()} / ₦{Number(c.goalAmount).toLocaleString()}</td>
-                                <td className="p-4">
-                                    <Link href={`/campaigns/${c.id}`} className="text-xs text-[#1B4332] font-medium hover:underline">View</Link>
-                                </td>
-                                <td className="p-4 flex gap-3">
+                                <td className="p-4 flex flex-wrap gap-3 items-center">
                                     <Link href={`/campaigns/${c.id}`} className="text-xs text-neutral-500 hover:underline">View</Link>
                                     <Link href={`/admin/campaigns/${c.id}/edit`} className="text-xs text-[#1B4332] font-medium hover:underline">Edit</Link>
+                                    {NEXT_STATUS[c.status] && (
+                                        <button
+                                            onClick={() => updateStatus.mutate({ id: c.id, status: NEXT_STATUS[c.status] })}
+                                            disabled={updateStatus.isPending}
+                                            className="text-xs px-3 py-1.5 rounded-lg bg-[#1B4332] text-white hover:bg-[#143526] disabled:opacity-50"
+                                        >
+                                            Advance → {NEXT_STATUS[c.status]}
+                                        </button>
+                                    )}
                                 </td>
                             </tr>
                         ))}
