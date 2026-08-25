@@ -1,6 +1,6 @@
-// src/hooks/useDonate.ts
 import { useMutation } from '@tanstack/react-query';
 import { apiFetch } from '@/lib/api';
+import { logActivity } from '@/lib/logger';
 
 interface DonateInput {
     campaignId: string;
@@ -12,13 +12,19 @@ interface DonateInput {
 
 export function useDonate() {
     return useMutation({
-        mutationFn: (data: DonateInput) =>
-            apiFetch<{ donationId: string; authorizationUrl: string }>('/donations', {
+        mutationFn: (data: DonateInput) => {
+            logActivity('PAYMENT', 'Donation submitted', { campaignId: data.campaignId, amount: data.amount, guest: !!data.email });
+            return apiFetch<{ donationId: string; authorizationUrl: string }>('/donations', {
                 method: 'POST',
                 body: JSON.stringify(data),
-            }),
+            });
+        },
         onSuccess: (data) => {
+            logActivity('PAYMENT', 'Donation created, redirecting to Paystack', { donationId: data.donationId });
             window.location.href = data.authorizationUrl;
+        },
+        onError: (error) => {
+            logActivity('PAYMENT', 'Donation failed', { message: (error as Error).message });
         },
     });
 }

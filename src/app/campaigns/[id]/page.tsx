@@ -57,14 +57,14 @@ export default function CampaignDetailPage() {
 
     if (isLoading || !campaign) {
         return (
-            <div className="min-h-screen bg-[#FBF9F3]">
+            <div className="min-h-screen bg-base">
                 <Navbar />
 
                 <div className="max-w-6xl mx-auto px-4 sm:px-6 py-24">
                     <div className="space-y-6 animate-pulse">
-                        <div className="h-[420px] rounded-[2rem] bg-[#E8EDE8]" />
-                        <div className="h-8 w-1/2 rounded bg-[#E8EDE8]" />
-                        <div className="h-4 w-2/3 rounded bg-[#E8EDE8]" />
+                        <div className="h-[420px] rounded-[2rem] bg-subtle" />
+                        <div className="h-8 w-1/2 rounded bg-subtle" />
+                        <div className="h-4 w-2/3 rounded bg-subtle" />
                     </div>
                 </div>
             </div>
@@ -81,7 +81,7 @@ export default function CampaignDetailPage() {
     const presetAmounts = [2500, 5000, 10000, 25000];
 
     return (
-        <div className="min-h-screen bg-[#FBF9F3] text-[#173B2B] overflow-x-hidden">
+        <div className="min-h-screen bg-base text-text-primary overflow-x-hidden">
             <Navbar />
 
             {/* HERO */}
@@ -105,13 +105,12 @@ export default function CampaignDetailPage() {
                             className="absolute inset-0 w-full h-full object-cover"
                         />
                     ) : (
-                        <div className="absolute inset-0 bg-gradient-to-br from-[#0B2418] via-[#1B4332] to-[#40916C]" />
+                        <div className="absolute inset-0 bg-gradient-to-br from-brand via-accent to-accent-hover" />
                     )}
 
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#071A11]/90 via-[#0B2418]/25 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-brand/90 via-brand/25 to-transparent" />
 
-                    {/* Decorative glow */}
-                    <div className="absolute -top-24 -right-24 w-72 h-72 rounded-full bg-[#B7E4C7]/15 blur-3xl" />
+                    <div className="absolute -top-24 -right-24 w-72 h-72 rounded-full bg-focus-ring/15 blur-3xl" />
 
                     <motion.div
                         initial="hidden"
@@ -121,7 +120,7 @@ export default function CampaignDetailPage() {
                     >
                         <motion.div variants={fadeUp}>
                             <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 backdrop-blur-md px-3.5 py-1.5 text-xs font-medium text-white">
-                                <span className="w-1.5 h-1.5 rounded-full bg-[#B7E4C7]" />
+                                <span className="w-1.5 h-1.5 rounded-full bg-focus-ring" />
                                 {campaign.status}
                             </span>
                         </motion.div>
@@ -135,7 +134,7 @@ export default function CampaignDetailPage() {
 
                         <motion.div
                             variants={fadeUp}
-                            className="mt-5 flex flex-wrap items-center gap-3 text-sm text-[#E9F5EC]/80"
+                            className="mt-5 flex flex-wrap items-center gap-3 text-sm text-white/80"
                         >
                             <span className="flex items-center gap-2">
                                 <CheckCircle2 size={16} />
@@ -191,19 +190,19 @@ export default function CampaignDetailPage() {
                                         key={stat.label}
                                         variants={fadeUp}
                                         whileHover={{ y: -4 }}
-                                        className="group rounded-2xl border border-[#DCE7DF] bg-white/70 p-5 transition-all duration-300 hover:border-[#9BC5AA] hover:shadow-[0_14px_40px_rgba(27,67,50,0.08)]"
+                                        className="group rounded-2xl border border-border-subtle bg-surface/70 p-5 transition-all duration-300 hover:border-border-hover hover:shadow-[0_14px_40px_rgba(27,67,50,0.08)]"
                                     >
                                         <Icon
                                             size={19}
                                             strokeWidth={1.7}
-                                            className="text-[#2D6A4F] transition-transform duration-300 group-hover:scale-110"
+                                            className="text-accent-hover transition-transform duration-300 group-hover:scale-110"
                                         />
 
-                                        <p className="mt-4 font-display text-2xl text-[#173B2B]">
+                                        <p className="mt-4 font-display text-2xl text-text-primary">
                                             {stat.value}
                                         </p>
 
-                                        <p className="mt-1 text-sm text-[#6C8175]">
+                                        <p className="mt-1 text-sm text-text-secondary">
                                             {stat.label}
                                         </p>
                                     </motion.div>
@@ -220,16 +219,16 @@ export default function CampaignDetailPage() {
                             className="space-y-5"
                         >
                             <div>
-                                <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#E8703A]">
+                                <p className="text-sm font-semibold uppercase tracking-[0.16em] text-highlight">
                                     The story
                                 </p>
 
-                                <h2 className="mt-2 font-display text-3xl sm:text-4xl text-[#173B2B]">
+                                <h2 className="mt-2 font-display text-3xl sm:text-4xl text-text-primary">
                                     About this campaign
                                 </h2>
                             </div>
 
-                            <div className="max-w-3xl text-[#5C7165] leading-8 text-[15px] sm:text-base whitespace-pre-line">
+                            <div className="max-w-3xl text-text-secondary leading-8 text-[15px] sm:text-base whitespace-pre-line">
                                 {campaign.description}
                             </div>
                         </motion.section>
@@ -240,19 +239,19 @@ export default function CampaignDetailPage() {
                             whileInView="visible"
                             viewport={{ once: true, margin: '-100px' }}
                             variants={fadeUp}
-                            className="rounded-3xl bg-[#EAF3EC] border border-[#D6E7DA] p-6 sm:p-8"
+                            className="rounded-3xl bg-accent/10 border border-focus-ring p-6 sm:p-8"
                         >
                             <div className="flex gap-4">
-                                <div className="shrink-0 w-11 h-11 rounded-full bg-[#1B4332] text-white flex items-center justify-center">
+                                <div className="shrink-0 w-11 h-11 rounded-full bg-accent text-white flex items-center justify-center">
                                     <ShieldCheck size={21} />
                                 </div>
 
                                 <div>
-                                    <h3 className="font-semibold text-[#173B2B]">
+                                    <h3 className="font-semibold text-text-primary">
                                         Your donation is tracked
                                     </h3>
 
-                                    <p className="mt-2 text-sm leading-6 text-[#5C7165]">
+                                    <p className="mt-2 text-sm leading-6 text-text-secondary">
                                         Every campaign on Finovia is reviewed before
                                         it goes live. Donations are tracked through
                                         the campaign lifecycle so supporters can
@@ -274,35 +273,34 @@ export default function CampaignDetailPage() {
                         }}
                         className="lg:sticky lg:top-24"
                     >
-                        <div className="relative rounded-[1.75rem] border border-[#D7E4DA] bg-white p-5 sm:p-7 shadow-[0_20px_60px_rgba(27,67,50,0.08)]">
+                        <div className="relative rounded-[1.75rem] border border-border-subtle bg-surface p-5 sm:p-7 shadow-[0_20px_60px_rgba(27,67,50,0.08)]">
 
-                            {/* small decorative glow */}
-                            <div className="absolute -top-10 -right-10 w-28 h-28 rounded-full bg-[#B7E4C7]/25 blur-2xl pointer-events-none" />
+                            <div className="absolute -top-10 -right-10 w-28 h-28 rounded-full bg-focus-ring/25 blur-2xl pointer-events-none" />
 
                             <div className="relative space-y-6">
                                 {isGuest && (
                                     <div className="space-y-3">
                                         <div className="space-y-1.5">
-                                            <label className="text-sm font-medium text-[#315044]">Full name</label>
+                                            <label className="text-sm font-medium text-text-primary">Full name</label>
                                             <input
                                                 value={guestName}
                                                 onChange={(e) => setGuestName(e.target.value)}
                                                 placeholder="Your name"
-                                                className="w-full rounded-xl border border-[#D5E1D8] bg-white px-4 py-3 text-sm outline-none focus:border-[#2D6A4F] focus:ring-4 focus:ring-[#B7E4C7]/30"
+                                                className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-sm text-text-primary outline-none focus:border-accent focus:ring-4 focus:ring-focus-ring/30"
                                             />
                                         </div>
                                         <div className="space-y-1.5">
-                                            <label className="text-sm font-medium text-[#315044]">Email</label>
+                                            <label className="text-sm font-medium text-text-primary">Email</label>
                                             <input
                                                 type="email"
                                                 required
                                                 value={guestEmail}
                                                 onChange={(e) => setGuestEmail(e.target.value)}
                                                 placeholder="you@example.com"
-                                                className="w-full rounded-xl border border-[#D5E1D8] bg-white px-4 py-3 text-sm outline-none focus:border-[#2D6A4F] focus:ring-4 focus:ring-[#B7E4C7]/30"
+                                                className="w-full rounded-xl border border-border bg-surface px-4 py-3 text-sm text-text-primary outline-none focus:border-accent focus:ring-4 focus:ring-focus-ring/30"
                                             />
                                         </div>
-                                        <label className="flex items-center gap-2 text-sm text-[#5C7165]">
+                                        <label className="flex items-center gap-2 text-sm text-text-secondary">
                                             <input type="checkbox" checked={anonymous} onChange={(e) => setAnonymous(e.target.checked)} className="rounded" />
                                             Make my donation anonymous
                                         </label>
@@ -313,21 +311,21 @@ export default function CampaignDetailPage() {
                                 <div>
                                     <div className="flex justify-between items-end">
                                         <div>
-                                            <p className="text-xs uppercase tracking-[0.14em] text-[#789083]">
+                                            <p className="text-xs uppercase tracking-[0.14em] text-text-muted">
                                                 Raised
                                             </p>
 
-                                            <p className="mt-1 font-display text-2xl text-[#173B2B]">
+                                            <p className="mt-1 font-display text-2xl text-text-primary">
                                                 ₦{Number(campaign.currentAmount).toLocaleString()}
                                             </p>
                                         </div>
 
-                                        <p className="text-sm text-[#789083]">
+                                        <p className="text-sm text-text-muted">
                                             of ₦{Number(campaign.goalAmount).toLocaleString()}
                                         </p>
                                     </div>
 
-                                    <div className="mt-4 h-2.5 bg-[#E7EFE9] rounded-full overflow-hidden">
+                                    <div className="mt-4 h-2.5 bg-subtle rounded-full overflow-hidden">
                                         <motion.div
                                             initial={{ width: 0 }}
                                             whileInView={{ width: `${pct}%` }}
@@ -337,11 +335,11 @@ export default function CampaignDetailPage() {
                                                 delay: 0.15,
                                                 ease: [0.16, 1, 0.3, 1],
                                             }}
-                                            className="h-full rounded-full bg-gradient-to-r from-[#1B4332] to-[#52B788]"
+                                            className="h-full rounded-full bg-gradient-to-r from-accent to-accent-hover"
                                         />
                                     </div>
 
-                                    <div className="mt-2 flex justify-between text-xs text-[#789083]">
+                                    <div className="mt-2 flex justify-between text-xs text-text-muted">
                                         <span>{Math.round(pct)}% funded</span>
                                         <span>
                                             ₦{Math.max(
@@ -353,16 +351,16 @@ export default function CampaignDetailPage() {
                                     </div>
                                 </div>
 
-                                <div className="h-px bg-[#E7EEE9]" />
+                                <div className="h-px bg-border-subtle" />
 
                                 {/* Amount */}
                                 <div className="space-y-4">
                                     <div>
-                                        <h3 className="font-semibold text-[#173B2B]">
+                                        <h3 className="font-semibold text-text-primary">
                                             Make a contribution
                                         </h3>
 
-                                        <p className="mt-1 text-sm text-[#789083]">
+                                        <p className="mt-1 text-sm text-text-muted">
                                             Every amount moves this campaign forward.
                                         </p>
                                     </div>
@@ -378,8 +376,8 @@ export default function CampaignDetailPage() {
                                                     whileTap={{ scale: 0.97 }}
                                                     onClick={() => setAmount(preset)}
                                                     className={`rounded-xl border px-3 py-3 text-sm font-medium transition-all duration-200 ${active
-                                                        ? 'border-[#1B4332] bg-[#EAF3EC] text-[#1B4332] shadow-sm'
-                                                        : 'border-[#D9E4DC] bg-[#FCFDFC] text-[#61756A] hover:border-[#9BC5AA] hover:bg-[#F3F8F4]'
+                                                        ? 'border-accent bg-accent/10 text-accent shadow-sm'
+                                                        : 'border-border bg-base text-text-secondary hover:border-border-hover hover:bg-subtle'
                                                         }`}
                                                 >
                                                     ₦{preset.toLocaleString()}
@@ -389,7 +387,7 @@ export default function CampaignDetailPage() {
                                     </div>
 
                                     <div className="relative">
-                                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-medium text-[#789083]">
+                                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-medium text-text-muted">
                                             ₦
                                         </span>
 
@@ -400,7 +398,7 @@ export default function CampaignDetailPage() {
                                             onChange={(e) =>
                                                 setAmount(Number(e.target.value))
                                             }
-                                            className="w-full rounded-xl border border-[#D9E4DC] bg-[#FCFDFC] py-3.5 pl-9 pr-4 text-sm text-[#173B2B] outline-none transition-all focus:border-[#2D6A4F] focus:ring-4 focus:ring-[#B7E4C7]/30"
+                                            className="w-full rounded-xl border border-border bg-base py-3.5 pl-9 pr-4 text-sm text-text-primary outline-none transition-all focus:border-accent focus:ring-4 focus:ring-focus-ring/30"
                                         />
                                     </div>
                                 </div>
@@ -417,7 +415,7 @@ export default function CampaignDetailPage() {
                                         })
                                     }
                                     disabled={donate.isPending || amount < 100 || (isGuest && !guestEmail)}
-                                    className="group w-full rounded-xl bg-[#1B4332] text-white py-3.5 text-sm font-semibold shadow-[0_10px_25px_rgba(27,67,50,0.2)] transition-all hover:bg-[#143526] hover:shadow-[0_14px_30px_rgba(27,67,50,0.25)] disabled:cursor-not-allowed disabled:opacity-50"
+                                    className="group w-full rounded-xl bg-accent text-white py-3.5 text-sm font-semibold shadow-[0_10px_25px_rgba(27,67,50,0.2)] transition-all hover:bg-accent-hover hover:shadow-[0_14px_30px_rgba(27,67,50,0.25)] disabled:cursor-not-allowed disabled:opacity-50"
                                 >
                                     <span className="flex items-center justify-center gap-2">
                                         {donate.isPending
@@ -437,18 +435,18 @@ export default function CampaignDetailPage() {
                                     <motion.p
                                         initial={{ opacity: 0, y: -5 }}
                                         animate={{ opacity: 1, y: 0 }}
-                                        className="rounded-xl bg-[#FFF0EC] border border-[#F5D1C7] px-3 py-2 text-sm text-[#B84A2F]"
+                                        className="rounded-xl bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-900/40 px-3 py-2 text-sm text-red-700 dark:text-red-400"
                                     >
                                         {(donate.error as Error).message}
                                     </motion.p>
                                 )}
 
-                                <p className="flex items-center justify-center gap-2 text-xs text-[#82958A]">
+                                <p className="flex items-center justify-center gap-2 text-xs text-text-muted">
                                     <ShieldCheck size={14} />
                                     Secure checkout via Paystack
                                 </p>
 
-                                <div className="flex items-center justify-center gap-2 text-xs text-[#82958A]">
+                                <div className="flex items-center justify-center gap-2 text-xs text-text-muted">
                                     <Heart size={13} />
                                     Your contribution creates measurable impact.
                                 </div>

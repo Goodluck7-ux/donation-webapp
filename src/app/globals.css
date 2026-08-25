@@ -1,25 +1,62 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg-base: #FBF9F3;
+  --bg-surface: #FFFFFF;
+  --bg-brand: #0B2418;
+  --text-primary: #173B2B;
+  --text-secondary: #718177;
+  --text-muted: #9AA69F;
+  --border-default: #D5E1D8;
+  --border-hover: #B8CBBE;
+  --accent-primary: #1B4332;
+  --accent-primary-hover: #143526;
+  --accent-highlight: #E8703A;
+  --focus-ring: #B7E4C7;
+  --bg-subtle: #EEE9DF;
+  --border-subtle: #E5DED2;
 }
+
+.dark {
+  --bg-base: #0F1712;
+  --bg-surface: #16211B;
+  --bg-brand: #060F0A;
+  --text-primary: #EAF2EC;
+  --text-secondary: #A9BBAF;
+  --text-muted: #6E7E73;
+  --border-default: #263329;
+  --border-hover: #34443A;
+  --accent-primary: #52B788;
+  --accent-primary-hover: #74C69D;
+  --accent-highlight: #F0895C;
+  --focus-ring: #2D6A4F;
+  --bg-subtle: #1A2620;
+  --border-subtle: #263329;
+}
+
+/* Enables the `dark:` variant to respond to a .dark class instead of OS preference */
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-base: var(--bg-base);
+  --color-surface: var(--bg-surface);
+  --color-brand: var(--bg-brand);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --color-border: var(--border-default);
+  --color-border-hover: var(--border-hover);
+  --color-accent: var(--accent-primary);
+  --color-accent-hover: var(--accent-primary-hover);
+  --color-highlight: var(--accent-highlight);
+  --color-focus-ring: var(--focus-ring);
   --font-sans: var(--font-body);
   --font-display: var(--font-display);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-subtle: var(--bg-subtle);
+  --color-border-subtle: var(--border-subtle);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--bg-base);
+  color: var(--text-primary);
 }

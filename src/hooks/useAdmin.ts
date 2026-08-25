@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiFetch } from '@/lib/api';
 import { Campaign } from './useCampaigns';
+import { logActivity } from '@/lib/logger';
 
 interface Stats {
     totalRaised: string;
@@ -10,54 +11,108 @@ interface Stats {
 }
 
 export function useAdminStats() {
-    return useQuery({ queryKey: ['admin-stats'], queryFn: () => apiFetch<Stats>('/campaigns/admin/stats') });
+    return useQuery({
+        queryKey: ['admin-stats'],
+        queryFn: async () => {
+            logActivity('API', 'Fetching admin stats');
+            const data = await apiFetch<Stats>('/campaigns/admin/stats');
+            logActivity('API', 'Admin stats loaded', data);
+            return data;
+        },
+    });
 }
 
 export function useAllCampaigns() {
-    return useQuery({ queryKey: ['admin-campaigns'], queryFn: () => apiFetch<Campaign[]>('/campaigns/admin/all') });
+    return useQuery({
+        queryKey: ['admin-campaigns'],
+        queryFn: async () => {
+            logActivity('CAMPAIGN', 'Fetching all campaigns (admin)');
+            const data = await apiFetch<Campaign[]>('/campaigns/admin/all');
+            logActivity('CAMPAIGN', 'Admin campaigns loaded', { count: data.length });
+            return data;
+        },
+    });
 }
 
 export function useUpdateCampaignStatus() {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: ({ id, status }: { id: string; status: string }) =>
-            apiFetch(`/campaigns/${id}/status`, { method: 'PATCH', body: JSON.stringify({ status }) }),
-        onSuccess: () => queryClient.invalidateQueries({ queryKey: ['admin-campaigns'] }),
+        mutationFn: ({ id, status }: { id: string; status: string }) => {
+            logActivity('CAMPAIGN', 'Updating campaign status', { id, status });
+            return apiFetch(`/campaigns/${id}/status`, { method: 'PATCH', body: JSON.stringify({ status }) });
+        },
+        onSuccess: (_, variables) => {
+            logActivity('CAMPAIGN', 'Campaign status updated', variables);
+            queryClient.invalidateQueries({ queryKey: ['admin-campaigns'] });
+        },
+        onError: (error) => {
+            logActivity('CAMPAIGN', 'Campaign status update failed', { message: (error as Error).message });
+        },
     });
 }
 
 export interface PlatformUser { id: string; name: string; email: string; role: string; createdAt: string }
 
 export function useAllUsers() {
-    return useQuery({ queryKey: ['admin-users'], queryFn: () => apiFetch<PlatformUser[]>('/users/admin/all') });
+    return useQuery({
+        queryKey: ['admin-users'],
+        queryFn: async () => {
+            logActivity('API', 'Fetching all users (admin)');
+            const data = await apiFetch<PlatformUser[]>('/users/admin/all');
+            logActivity('API', 'Admin users loaded', { count: data.length });
+            return data;
+        },
+    });
 }
 
 export function useUpdateUserRole() {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: ({ id, role }: { id: string; role: string }) =>
-            apiFetch(`/users/admin/${id}/role`, { method: 'PATCH', body: JSON.stringify({ role }) }),
-        onSuccess: () => queryClient.invalidateQueries({ queryKey: ['admin-users'] }),
+        mutationFn: ({ id, role }: { id: string; role: string }) => {
+            logActivity('AUTH', 'Updating user role', { id, role });
+            return apiFetch(`/users/admin/${id}/role`, { method: 'PATCH', body: JSON.stringify({ role }) });
+        },
+        onSuccess: (_, variables) => {
+            logActivity('AUTH', 'User role updated', variables);
+            queryClient.invalidateQueries({ queryKey: ['admin-users'] });
+        },
+        onError: (error) => {
+            logActivity('AUTH', 'User role update failed', { message: (error as Error).message });
+        },
     });
 }
 
 export function useCreateCampaign() {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: (data: { title: string; description: string; goalAmount: number; organizationId: string; imageUrl?: string; category: string }) =>
-            apiFetch('/campaigns', { method: 'POST', body: JSON.stringify(data) }),
-        onSuccess: () => queryClient.invalidateQueries({ queryKey: ['admin-campaigns'] }),
+        mutationFn: (data: { title: string; description: string; goalAmount: number; organizationId: string; imageUrl?: string; category: string }) => {
+            logActivity('CAMPAIGN', 'Creating campaign', { title: data.title, category: data.category, goalAmount: data.goalAmount });
+            return apiFetch('/campaigns', { method: 'POST', body: JSON.stringify(data) });
+        },
+        onSuccess: () => {
+            logActivity('CAMPAIGN', 'Campaign created successfully');
+            queryClient.invalidateQueries({ queryKey: ['admin-campaigns'] });
+        },
+        onError: (error) => {
+            logActivity('CAMPAIGN', 'Campaign creation failed', { message: (error as Error).message });
+        },
     });
 }
 
 export function useUpdateCampaign() {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: ({ id, ...data }: { id: string; title: string; description: string; goalAmount: number; imageUrl?: string }) =>
-            apiFetch(`/campaigns/${id}`, { method: 'PATCH', body: JSON.stringify(data) }),
+        mutationFn: ({ id, ...data }: { id: string; title: string; description: string; goalAmount: number; imageUrl?: string }) => {
+            logActivity('CAMPAIGN', 'Updating campaign', { id, title: data.title });
+            return apiFetch(`/campaigns/${id}`, { method: 'PATCH', body: JSON.stringify(data) });
+        },
         onSuccess: (_, variables) => {
+            logActivity('CAMPAIGN', 'Campaign updated successfully', { id: variables.id });
             queryClient.invalidateQueries({ queryKey: ['admin-campaigns'] });
             queryClient.invalidateQueries({ queryKey: ['campaign', variables.id] });
+        },
+        onError: (error) => {
+            logActivity('CAMPAIGN', 'Campaign update failed', { message: (error as Error).message });
         },
     });
 }

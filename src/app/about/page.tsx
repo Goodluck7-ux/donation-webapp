@@ -16,30 +16,30 @@ const TIMELINE = [
 
 export default function AboutPage() {
     return (
-        <div>
+        <div className="bg-base text-text-primary">
             <Navbar />
 
             <section className="max-w-3xl mx-auto px-4 sm:px-6 pt-16 sm:pt-24 pb-16 text-center space-y-6">
-                <p className="text-sm font-medium text-emerald-700">Our mission</p>
-                <h1 className="font-display text-4xl sm:text-5xl text-neutral-900 leading-tight">
+                <p className="text-sm font-medium text-accent-hover">Our mission</p>
+                <h1 className="font-display text-4xl sm:text-5xl text-text-primary leading-tight">
                     Funding the proof — not the promises.
                 </h1>
-                <p className="text-neutral-500 text-lg leading-relaxed max-w-2xl mx-auto">
+                <p className="text-text-secondary text-lg leading-relaxed max-w-2xl mx-auto">
                     Riverside exists because donors deserve more than a thank-you email. We connect people directly to
                     vetted causes worldwide, and track every dollar from contribution to real-world outcome — so generosity
                     is never a leap of faith.
                 </p>
             </section>
 
-            <section className="border-y border-neutral-200 bg-neutral-50">
+            <section className="border-y border-border-subtle bg-subtle">
                 <div className="max-w-5xl mx-auto px-4 sm:px-6 py-14 grid sm:grid-cols-3 gap-8">
                     {VALUES.map((v) => (
                         <div key={v.title} className="space-y-3">
-                            <div className="w-11 h-11 rounded-xl bg-white border border-neutral-200 flex items-center justify-center">
-                                <v.icon size={20} className="text-emerald-700" strokeWidth={1.75} />
+                            <div className="w-11 h-11 rounded-xl bg-surface border border-border-subtle flex items-center justify-center">
+                                <v.icon size={20} className="text-accent-hover" strokeWidth={1.75} />
                             </div>
-                            <h3 className="font-medium text-neutral-900">{v.title}</h3>
-                            <p className="text-sm text-neutral-500 leading-relaxed">{v.body}</p>
+                            <h3 className="font-medium text-text-primary">{v.title}</h3>
+                            <p className="text-sm text-text-secondary leading-relaxed">{v.body}</p>
                         </div>
                     ))}
                 </div>
@@ -47,30 +47,30 @@ export default function AboutPage() {
 
             <section className="max-w-3xl mx-auto px-4 sm:px-6 py-20 space-y-10">
                 <div className="text-center space-y-2">
-                    <p className="text-sm font-medium text-emerald-700">Our story</p>
-                    <h2 className="font-display text-3xl text-neutral-900">How Finovia.Givings came to be.</h2>
+                    <p className="text-sm font-medium text-accent-hover">Our story</p>
+                    <h2 className="font-display text-3xl text-text-primary">How Finovia.Givings came to be.</h2>
                 </div>
                 <div className="space-y-8">
                     {TIMELINE.map((t, i) => (
                         <div key={t.year} className="flex gap-6">
                             <div className="flex flex-col items-center">
-                                <span className="font-display text-lg text-emerald-700 w-16 shrink-0">{t.year}</span>
-                                {i < TIMELINE.length - 1 && <div className="w-px flex-1 bg-neutral-200 mt-2" />}
+                                <span className="font-display text-lg text-accent-hover w-16 shrink-0">{t.year}</span>
+                                {i < TIMELINE.length - 1 && <div className="w-px flex-1 bg-border-subtle mt-2" />}
                             </div>
                             <div className="pb-8">
-                                <h4 className="font-medium text-neutral-900">{t.label}</h4>
-                                <p className="text-sm text-neutral-500 mt-1 leading-relaxed">{t.body}</p>
+                                <h4 className="font-medium text-text-primary">{t.label}</h4>
+                                <p className="text-sm text-text-secondary mt-1 leading-relaxed">{t.body}</p>
                             </div>
                         </div>
                     ))}
                 </div>
             </section>
 
-            <section className="bg-[#0F2E1D] text-white">
+            <section className="bg-brand text-white">
                 <div className="max-w-2xl mx-auto px-4 sm:px-6 py-16 text-center space-y-4">
-                    <MapPin size={22} className="mx-auto text-emerald-200/70" strokeWidth={1.75} />
+                    <MapPin size={22} className="mx-auto text-focus-ring/70" strokeWidth={1.75} />
                     <h2 className="font-display text-2xl sm:text-3xl">Currently funding causes across 4 countries.</h2>
-                    <p className="text-emerald-100/70">Every campaign you see was vetted by our team before it went live.</p>
+                    <p className="text-white/70">Every campaign you see was vetted by our team before it went live.</p>
                 </div>
             </section>
 

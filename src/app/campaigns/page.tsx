@@ -55,16 +55,14 @@ export default function CampaignsPage() {
     const { data: campaigns, isLoading, isError } = useCampaigns();
 
     const [activeCategory, setActiveCategory] = useState<
-        'all' | CampaignCategory
-    >('all');
+    'all' | CampaignCategory
+        > ('all');
+        
 
     const [search, setSearch] = useState('');
 
     const campaignData = (campaigns ?? []) as Campaign[];
 
-    /*
-     * Filter campaigns using real backend data.
-     */
     const filteredCampaigns = useMemo(() => {
         return campaignData.filter((campaign) => {
             const matchesCategory =
@@ -82,10 +80,6 @@ export default function CampaignsPage() {
         });
     }, [campaignData, activeCategory, search]);
 
-    /*
-     * Featured campaign comes from the actual API.
-     * We select the campaign with the highest funding percentage.
-     */
     const featuredCampaign = useMemo(() => {
         if (filteredCampaigns.length === 0) return null;
 
@@ -108,9 +102,6 @@ export default function CampaignsPage() {
         );
     }, [filteredCampaigns, featuredCampaign]);
 
-    /*
-     * Category counts are calculated from the actual campaigns.
-     */
     const categoryCounts = useMemo(() => {
         return categories.reduce(
             (acc, category) => {
@@ -129,15 +120,11 @@ export default function CampaignsPage() {
     }, [campaignData]);
 
     return (
-        <main className="min-h-screen overflow-hidden bg-[#F8F5EE] text-[#17352A]">
+        <main className="min-h-screen overflow-hidden bg-base text-text-primary">
             <Navbar />
 
-            {/* =====================================================
-                HERO
-            ===================================================== */}
-
-            <section className="relative border-b border-[#E5DED2]">
-                <div className="pointer-events-none absolute -left-32 top-16 h-80 w-80 rounded-full bg-[#E8E1D5] opacity-50 blur-3xl" />
+            <section className="relative border-b border-border-subtle">
+                <div className="pointer-events-none absolute -left-32 top-16 h-80 w-80 rounded-full bg-subtle opacity-50 blur-3xl" />
 
                 <div className="relative mx-auto max-w-7xl px-5 pb-14 pt-16 sm:px-8 sm:pb-20 sm:pt-24 lg:px-10">
                     <motion.div
@@ -146,40 +133,38 @@ export default function CampaignsPage() {
                         variants={fadeUp}
                         className="mx-auto max-w-4xl text-center"
                     >
-                        <span className="inline-flex items-center gap-2 rounded-full border border-[#D6E4DA] bg-[#EDF5EF] px-4 py-2 text-[10px] font-bold uppercase tracking-[0.18em] text-[#27714E] sm:text-xs">
-                            <span className="h-1.5 w-1.5 rounded-full bg-[#2D8B5E]" />
+                        <span className="inline-flex items-center gap-2 rounded-full border border-accent/20 bg-accent/10 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.18em] text-accent-hover sm:text-xs">
+                            <span className="h-1.5 w-1.5 rounded-full bg-accent-hover" />
                             {campaignData.length} active causes
                         </span>
 
                         <h1 className="mt-6 font-display text-[3.2rem] leading-[0.98] tracking-[-0.045em] sm:text-6xl md:text-7xl">
                             Find a cause
                             <br />
-                            <em className="font-normal text-[#27714E]">
+                            <em className="font-normal text-accent-hover">
                                 worth believing in.
                             </em>
                         </h1>
 
-                        <p className="mx-auto mt-6 max-w-2xl text-[15px] leading-7 text-[#718078] sm:text-lg">
+                        <p className="mx-auto mt-6 max-w-2xl text-[15px] leading-7 text-text-secondary sm:text-lg">
                             Discover vetted campaigns making a measurable
                             difference in communities around the world.
                             Choose a cause and make your contribution count.
                         </p>
                     </motion.div>
 
-                    {/* Real campaign statistics */}
-
                     <motion.div
                         initial="hidden"
                         animate="visible"
                         variants={fadeUp}
-                        className="mx-auto mt-12 grid max-w-4xl grid-cols-3 divide-x divide-[#DDD6CA] rounded-2xl border border-[#DED7CA] bg-[#FBF9F4]"
+                        className="mx-auto mt-12 grid max-w-4xl grid-cols-3 divide-x divide-border-subtle rounded-2xl border border-border-subtle bg-surface"
                     >
                         <div className="px-3 py-5 text-center sm:px-6">
                             <p className="font-display text-2xl sm:text-3xl">
                                 {campaignData.length}
                             </p>
 
-                            <p className="mt-1 text-[9px] font-bold uppercase tracking-[0.15em] text-[#929D96] sm:text-[10px]">
+                            <p className="mt-1 text-[9px] font-bold uppercase tracking-[0.15em] text-text-muted sm:text-[10px]">
                                 Active causes
                             </p>
                         </div>
@@ -204,7 +189,7 @@ export default function CampaignsPage() {
                                     : '₦0'}
                             </p>
 
-                            <p className="mt-1 text-[9px] font-bold uppercase tracking-[0.15em] text-[#929D96] sm:text-[10px]">
+                            <p className="mt-1 text-[9px] font-bold uppercase tracking-[0.15em] text-text-muted sm:text-[10px]">
                                 Raised
                             </p>
                         </div>
@@ -214,7 +199,7 @@ export default function CampaignsPage() {
                                 100%
                             </p>
 
-                            <p className="mt-1 text-[9px] font-bold uppercase tracking-[0.15em] text-[#929D96] sm:text-[10px]">
+                            <p className="mt-1 text-[9px] font-bold uppercase tracking-[0.15em] text-text-muted sm:text-[10px]">
                                 Transparent
                             </p>
                         </div>
@@ -222,22 +207,16 @@ export default function CampaignsPage() {
                 </div>
             </section>
 
-            {/* =====================================================
-                SEARCH + CATEGORY FILTERS
-            ===================================================== */}
-
-            <section className="sticky top-0 z-30 border-b border-[#E1DACE] bg-[#F8F5EE]/95 backdrop-blur-xl">
+            <section className="sticky top-0 z-30 border-b border-border-subtle bg-base/95 backdrop-blur-xl">
                 <div className="mx-auto max-w-7xl px-5 py-4 sm:px-8 lg:px-10">
                     <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-                        {/* Search */}
-
                         <div className="relative w-full lg:max-w-xs">
                             <svg
                                 viewBox="0 0 24 24"
                                 fill="none"
                                 stroke="currentColor"
                                 strokeWidth="1.8"
-                                className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#89948D]"
+                                className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-text-muted"
                             >
                                 <circle cx="11" cy="11" r="7" />
                                 <path d="m20 20-4-4" />
@@ -250,11 +229,9 @@ export default function CampaignsPage() {
                                     setSearch(event.target.value)
                                 }
                                 placeholder="Search campaigns..."
-                                className="w-full rounded-full border border-[#D8D1C5] bg-[#FBF9F4] py-3 pl-11 pr-4 text-sm text-[#294439] outline-none transition focus:border-[#3A7659] focus:ring-2 focus:ring-[#3A7659]/10"
+                                className="w-full rounded-full border border-border bg-surface py-3 pl-11 pr-4 text-sm text-text-primary outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/10"
                             />
                         </div>
-
-                        {/* Categories */}
 
                         <div className="flex gap-2 overflow-x-auto pb-1 lg:pb-0">
                             {categories.map((category) => {
@@ -269,16 +246,16 @@ export default function CampaignsPage() {
                                             setActiveCategory(category.value)
                                         }
                                         className={`flex shrink-0 items-center gap-2 rounded-full px-4 py-2.5 text-xs font-bold transition-all duration-300 ${active
-                                                ? 'bg-[#173F2C] text-white shadow-sm'
-                                                : 'border border-[#D8D1C5] bg-[#FBF9F4] text-[#68756D] hover:border-[#AFA79A] hover:text-[#294439]'
+                                            ? 'bg-brand text-white shadow-sm'
+                                            : 'border border-border bg-surface text-text-secondary hover:border-border-hover hover:text-text-primary'
                                             }`}
                                     >
                                         {category.label}
 
                                         <span
                                             className={`rounded-full px-1.5 py-0.5 text-[9px] ${active
-                                                    ? 'bg-white/15 text-white'
-                                                    : 'bg-[#ECE7DD] text-[#7B867F]'
+                                                ? 'bg-white/15 text-white'
+                                                : 'bg-subtle text-text-muted'
                                                 }`}
                                         >
                                             {categoryCounts[category.value] ??
@@ -292,51 +269,39 @@ export default function CampaignsPage() {
                 </div>
             </section>
 
-            {/* =====================================================
-                CONTENT
-            ===================================================== */}
-
             <section className="px-5 py-16 sm:px-8 lg:px-10 lg:py-20">
                 <div className="mx-auto max-w-6xl">
-                    {/* Error */}
-
                     {isError && (
-                        <div className="rounded-3xl border border-[#E7C9C0] bg-[#FCF0EC] px-6 py-16 text-center">
-                            <h2 className="font-display text-2xl text-[#693B31]">
+                        <div className="rounded-3xl border border-red-200 bg-red-50 dark:border-red-900/40 dark:bg-red-500/10 px-6 py-16 text-center">
+                            <h2 className="font-display text-2xl text-red-800 dark:text-red-300">
                                 We couldn't load the campaigns.
                             </h2>
 
-                            <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-[#8C665D]">
+                            <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-red-600 dark:text-red-400/80">
                                 Please refresh the page and try again.
                             </p>
 
                             <button
                                 type="button"
                                 onClick={() => window.location.reload()}
-                                className="mt-6 rounded-full bg-[#173F2C] px-6 py-3 text-xs font-bold text-white transition hover:bg-[#0F3021]"
+                                className="mt-6 rounded-full bg-brand px-6 py-3 text-xs font-bold text-white transition hover:brightness-110"
                             >
                                 Try again
                             </button>
                         </div>
                     )}
 
-                    {/* Loading */}
-
                     {isLoading && (
                         <div className="flex min-h-[320px] items-center justify-center">
-                            <div className="flex items-center gap-3 text-sm text-[#77847C]">
-                                <span className="h-5 w-5 animate-spin rounded-full border-2 border-[#C9D8CE] border-t-[#28714F]" />
+                            <div className="flex items-center gap-3 text-sm text-text-secondary">
+                                <span className="h-5 w-5 animate-spin rounded-full border-2 border-border-subtle border-t-accent-hover" />
                                 Loading campaigns...
                             </div>
                         </div>
                     )}
 
-                    {/* Loaded content */}
-
                     {!isLoading && !isError && (
                         <>
-                            {/* Featured */}
-
                             {featuredCampaign && (
                                 <motion.div
                                     initial="hidden"
@@ -348,11 +313,11 @@ export default function CampaignsPage() {
                                     variants={fadeUp}
                                 >
                                     <div className="mb-7">
-                                        <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#D96525]">
+                                        <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-highlight">
                                             ✦ Featured campaign
                                         </p>
 
-                                        <p className="mt-1 text-sm text-[#87928B]">
+                                        <p className="mt-1 text-sm text-text-muted">
                                             A cause currently making an impact
                                         </p>
                                     </div>
@@ -363,12 +328,10 @@ export default function CampaignsPage() {
                                 </motion.div>
                             )}
 
-                            {/* Campaign grid */}
-
                             <div className="mt-20">
                                 <div className="mb-9 flex items-end justify-between">
                                     <div>
-                                        <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.18em] text-[#D96525]">
+                                        <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.18em] text-highlight">
                                             Explore
                                         </p>
 
@@ -377,7 +340,7 @@ export default function CampaignsPage() {
                                         </h2>
                                     </div>
 
-                                    <p className="hidden text-xs text-[#89938C] sm:block">
+                                    <p className="hidden text-xs text-text-muted sm:block">
                                         {filteredCampaigns.length}{' '}
                                         {filteredCampaigns.length === 1
                                             ? 'campaign'
@@ -411,17 +374,17 @@ export default function CampaignsPage() {
                                                 opacity: 1,
                                                 y: 0,
                                             }}
-                                            className="rounded-3xl border border-[#DDD6CA] bg-[#FBF9F4] px-6 py-20 text-center"
+                                            className="rounded-3xl border border-border-subtle bg-surface px-6 py-20 text-center"
                                         >
-                                            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#E4EEE7] text-xl text-[#397A58]">
+                                            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-accent/10 text-xl text-accent-hover">
                                                 ✦
                                             </div>
 
-                                            <h3 className="mt-6 font-display text-2xl text-[#274438]">
+                                            <h3 className="mt-6 font-display text-2xl text-text-primary">
                                                 No campaigns found.
                                             </h3>
 
-                                            <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-[#7C8880]">
+                                            <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-text-secondary">
                                                 Try another search term or
                                                 choose a different cause.
                                             </p>
@@ -432,7 +395,7 @@ export default function CampaignsPage() {
                                                     setSearch('');
                                                     setActiveCategory('all');
                                                 }}
-                                                className="mt-6 rounded-full bg-[#173F2C] px-6 py-3 text-xs font-bold text-white transition hover:bg-[#0F3021]"
+                                                className="mt-6 rounded-full bg-brand px-6 py-3 text-xs font-bold text-white transition hover:brightness-110"
                                             >
                                                 View all campaigns
                                             </button>
@@ -445,11 +408,7 @@ export default function CampaignsPage() {
                 </div>
             </section>
 
-            {/* =====================================================
-                TRUST SECTION
-            ===================================================== */}
-
-            <section className="bg-[#EEE9DF] px-5 py-20 sm:px-8 lg:px-10 lg:py-24">
+            <section className="bg-subtle px-5 py-20 sm:px-8 lg:px-10 lg:py-24">
                 <div className="mx-auto max-w-6xl">
                     <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
                         <motion.div
@@ -461,19 +420,19 @@ export default function CampaignsPage() {
                             }}
                             variants={fadeUp}
                         >
-                            <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.18em] text-[#D96525]">
+                            <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.18em] text-highlight">
                                 Why give with Finovia
                             </p>
 
                             <h2 className="font-display text-4xl leading-tight tracking-tight sm:text-5xl">
                                 Giving should feel
                                 <br />
-                                <em className="font-normal text-[#28714F]">
+                                <em className="font-normal text-accent-hover">
                                     trustworthy.
                                 </em>
                             </h2>
 
-                            <p className="mt-5 max-w-md text-sm leading-7 text-[#748179]">
+                            <p className="mt-5 max-w-md text-sm leading-7 text-text-secondary">
                                 Your generosity deserves transparency. Every
                                 campaign is presented with clear funding
                                 information so you can understand the impact
@@ -504,10 +463,6 @@ export default function CampaignsPage() {
                 </div>
             </section>
 
-            {/* =====================================================
-                CTA
-            ===================================================== */}
-
             <section className="px-5 py-12 sm:px-8 lg:px-10 lg:py-16">
                 <motion.div
                     initial="hidden"
@@ -517,12 +472,12 @@ export default function CampaignsPage() {
                         margin: '-100px',
                     }}
                     variants={fadeUp}
-                    className="relative mx-auto max-w-6xl overflow-hidden rounded-[2rem] bg-[#123F2C]"
+                    className="relative mx-auto max-w-6xl overflow-hidden rounded-[2rem] bg-brand"
                 >
-                    <div className="pointer-events-none absolute -right-24 -top-24 h-80 w-80 rounded-full border-[50px] border-[#2D7657]/20" />
+                    <div className="pointer-events-none absolute -right-24 -top-24 h-80 w-80 rounded-full border-[50px] border-accent-hover/20" />
 
                     <div className="relative px-7 py-14 text-center sm:px-12 sm:py-16">
-                        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#8BC8A7]">
+                        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-focus-ring">
                             Make your contribution count
                         </p>
 
@@ -530,7 +485,7 @@ export default function CampaignsPage() {
                             One decision can change a life.
                         </h2>
 
-                        <p className="mx-auto mt-5 max-w-xl text-sm leading-6 text-[#C3D8CC]">
+                        <p className="mx-auto mt-5 max-w-xl text-sm leading-6 text-white/70">
                             Find a campaign you believe in and help move it
                             closer to its goal.
                         </p>
@@ -543,7 +498,7 @@ export default function CampaignsPage() {
                                     behavior: 'smooth',
                                 });
                             }}
-                            className="mt-8 inline-flex rounded-full bg-[#F07836] px-7 py-3.5 text-sm font-bold text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#E66A2B]"
+                            className="mt-8 inline-flex rounded-full bg-highlight px-7 py-3.5 text-sm font-bold text-white transition-all duration-300 hover:-translate-y-0.5 hover:brightness-95"
                         >
                             Explore causes
                             <span className="ml-2">↑</span>
@@ -556,10 +511,6 @@ export default function CampaignsPage() {
         </main>
     );
 }
-
-/* =========================================================
-   FEATURED CAMPAIGN
-========================================================= */
 
 function FeaturedCampaign({
     campaign,
@@ -577,7 +528,7 @@ function FeaturedCampaign({
     return (
         <Link
             href={`/campaigns/${campaign.id}`}
-            className="group grid overflow-hidden rounded-[2rem] border border-[#DED7CA] bg-[#FBF9F4] shadow-[0_10px_40px_rgba(40,50,40,0.04)] transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_25px_60px_rgba(40,50,40,0.1)] lg:grid-cols-[1.15fr_0.85fr]"
+            className="group grid overflow-hidden rounded-[2rem] border border-border-subtle bg-surface shadow-[0_10px_40px_rgba(40,50,40,0.04)] transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_25px_60px_rgba(40,50,40,0.1)] lg:grid-cols-[1.15fr_0.85fr]"
         >
             <div className="relative aspect-[4/3] overflow-hidden lg:aspect-auto lg:min-h-[480px]">
                 {campaign.imageUrl ? (
@@ -587,45 +538,45 @@ function FeaturedCampaign({
                         className="h-full w-full object-cover transition-transform duration-1000 group-hover:scale-105"
                     />
                 ) : (
-                    <div className="flex h-full min-h-[320px] items-center justify-center bg-[#DDE9E0]">
-                        <span className="font-display text-6xl text-[#629078]">
+                    <div className="flex h-full min-h-[320px] items-center justify-center bg-accent/10">
+                        <span className="font-display text-6xl text-accent-hover">
                             ✦
                         </span>
                     </div>
                 )}
 
-                <div className="absolute inset-0 bg-gradient-to-t from-[#102D21]/35 via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-brand/35 via-transparent to-transparent" />
 
-                <div className="absolute bottom-5 left-5 rounded-full bg-white/95 px-4 py-2 text-xs font-bold text-[#28714F] shadow-lg">
+                <div className="absolute bottom-5 left-5 rounded-full bg-surface/95 px-4 py-2 text-xs font-bold text-accent-hover shadow-lg">
                     {percentage}% funded
                 </div>
             </div>
 
             <div className="flex flex-col justify-center p-7 sm:p-10 lg:p-12">
-                <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#D96525]">
+                <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-highlight">
                     {formatCategory(campaign.category)}
                 </p>
 
-                <h2 className="mt-4 font-display text-3xl leading-tight tracking-tight text-[#1B382D] sm:text-4xl">
+                <h2 className="mt-4 font-display text-3xl leading-tight tracking-tight text-text-primary sm:text-4xl">
                     {campaign.title}
                 </h2>
 
-                <p className="mt-4 line-clamp-4 text-sm leading-7 text-[#748179]">
+                <p className="mt-4 line-clamp-4 text-sm leading-7 text-text-secondary">
                     {campaign.description}
                 </p>
 
                 <div className="mt-8">
                     <div className="mb-2 flex items-center justify-between text-xs">
-                        <span className="font-bold text-[#28714F]">
+                        <span className="font-bold text-accent-hover">
                             {percentage}% funded
                         </span>
 
-                        <span className="text-[#8E9892]">
+                        <span className="text-text-muted">
                             ₦{current.toLocaleString()}
                         </span>
                     </div>
 
-                    <div className="h-2 overflow-hidden rounded-full bg-[#DCE6DE]">
+                    <div className="h-2 overflow-hidden rounded-full bg-subtle">
                         <motion.div
                             initial={{ width: 0 }}
                             whileInView={{
@@ -636,16 +587,16 @@ function FeaturedCampaign({
                                 duration: 1.2,
                                 ease: 'easeOut',
                             }}
-                            className="h-full rounded-full bg-[#2D8B5E]"
+                            className="h-full rounded-full bg-accent-hover"
                         />
                     </div>
 
-                    <p className="mt-2 text-[10px] text-[#9AA39D]">
+                    <p className="mt-2 text-[10px] text-text-muted">
                         Goal: ₦{goal.toLocaleString()}
                     </p>
                 </div>
 
-                <div className="mt-9 inline-flex w-fit rounded-full bg-[#E96B2C] px-6 py-3 text-xs font-bold text-white transition-all duration-300 group-hover:bg-[#D95E22]">
+                <div className="mt-9 inline-flex w-fit rounded-full bg-highlight px-6 py-3 text-xs font-bold text-white transition-all duration-300 group-hover:brightness-95">
                     Support this campaign
                     <span className="ml-2 transition-transform duration-300 group-hover:translate-x-1">
                         →
@@ -655,10 +606,6 @@ function FeaturedCampaign({
         </Link>
     );
 }
-
-/* =========================================================
-   CAMPAIGN CARD
-========================================================= */
 
 function CampaignCard({
     campaign,
@@ -693,9 +640,9 @@ function CampaignCard({
         >
             <Link
                 href={`/campaigns/${campaign.id}`}
-                className="group block overflow-hidden rounded-3xl border border-[#DED7CA] bg-[#FBF9F4] transition-all duration-400 hover:-translate-y-1 hover:border-[#BDB5A7] hover:shadow-[0_18px_45px_rgba(40,50,40,0.08)]"
+                className="group block overflow-hidden rounded-3xl border border-border-subtle bg-surface transition-all duration-400 hover:-translate-y-1 hover:border-border-hover hover:shadow-[0_18px_45px_rgba(40,50,40,0.08)]"
             >
-                <div className="relative aspect-[4/3] overflow-hidden bg-[#DDE7DF]">
+                <div className="relative aspect-[4/3] overflow-hidden bg-subtle">
                     {campaign.imageUrl ? (
                         <img
                             src={campaign.imageUrl}
@@ -703,41 +650,41 @@ function CampaignCard({
                             className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                         />
                     ) : (
-                        <div className="flex h-full items-center justify-center bg-[#DDE9E0]">
-                            <span className="font-display text-5xl text-[#6A947B]">
+                        <div className="flex h-full items-center justify-center bg-accent/10">
+                            <span className="font-display text-5xl text-accent-hover">
                                 ✦
                             </span>
                         </div>
                     )}
 
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#102D21]/20 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-brand/20 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
 
-                    <span className="absolute left-4 top-4 rounded-full bg-white/95 px-3 py-1.5 text-[10px] font-bold text-[#28714F] shadow-sm">
+                    <span className="absolute left-4 top-4 rounded-full bg-surface/95 px-3 py-1.5 text-[10px] font-bold text-accent-hover shadow-sm">
                         {formatCategory(campaign.category)}
                     </span>
                 </div>
 
                 <div className="p-5">
-                    <h3 className="font-display text-xl leading-tight text-[#1B382D]">
+                    <h3 className="font-display text-xl leading-tight text-text-primary">
                         {campaign.title}
                     </h3>
 
-                    <p className="mt-2 line-clamp-2 text-sm leading-6 text-[#77837B]">
+                    <p className="mt-2 line-clamp-2 text-sm leading-6 text-text-secondary">
                         {campaign.description}
                     </p>
 
                     <div className="mt-5">
                         <div className="mb-2 flex items-center justify-between text-[10px] font-semibold uppercase tracking-wide">
-                            <span className="text-[#3B7257]">
+                            <span className="text-accent-hover">
                                 {percentage}% funded
                             </span>
 
-                            <span className="text-[#969F99]">
+                            <span className="text-text-muted">
                                 ₦{current.toLocaleString()}
                             </span>
                         </div>
 
-                        <div className="h-2 overflow-hidden rounded-full bg-[#DDE6DF]">
+                        <div className="h-2 overflow-hidden rounded-full bg-subtle">
                             <motion.div
                                 initial={{
                                     width: 0,
@@ -752,11 +699,11 @@ function CampaignCard({
                                     duration: 0.9,
                                     ease: 'easeOut',
                                 }}
-                                className="h-full rounded-full bg-[#2D8B5E]"
+                                className="h-full rounded-full bg-accent-hover"
                             />
                         </div>
 
-                        <div className="mt-2 flex justify-between text-[10px] text-[#9AA39D]">
+                        <div className="mt-2 flex justify-between text-[10px] text-text-muted">
                             <span>
                                 ₦{current.toLocaleString()} raised
                             </span>
@@ -767,12 +714,12 @@ function CampaignCard({
                         </div>
                     </div>
 
-                    <div className="mt-5 flex items-center justify-between border-t border-[#E5DFD4] pt-4">
-                        <span className="text-[10px] font-medium uppercase tracking-wide text-[#9BA39D]">
+                    <div className="mt-5 flex items-center justify-between border-t border-border-subtle pt-4">
+                        <span className="text-[10px] font-medium uppercase tracking-wide text-text-muted">
                             Make an impact
                         </span>
 
-                        <span className="text-xs font-bold text-[#28714F] transition-transform duration-300 group-hover:translate-x-1">
+                        <span className="text-xs font-bold text-accent-hover transition-transform duration-300 group-hover:translate-x-1">
                             View campaign →
                         </span>
                     </div>
@@ -781,10 +728,6 @@ function CampaignCard({
         </motion.div>
     );
 }
-
-/* =========================================================
-   TRUST ITEM
-========================================================= */
 
 function TrustItem({
     number,
@@ -804,28 +747,24 @@ function TrustItem({
                 margin: '-80px',
             }}
             variants={fadeUp}
-            className="group flex gap-5 rounded-2xl border border-[#E2DBD0] bg-[#FBF9F4] p-5 transition-all duration-300 hover:-translate-x-1 hover:shadow-[0_12px_30px_rgba(40,50,40,0.05)]"
+            className="group flex gap-5 rounded-2xl border border-border-subtle bg-surface p-5 transition-all duration-300 hover:-translate-x-1 hover:shadow-[0_12px_30px_rgba(40,50,40,0.05)]"
         >
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#E2EEE5] text-[10px] font-bold text-[#28714F]">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-accent/10 text-[10px] font-bold text-accent-hover">
                 {number}
             </div>
 
             <div>
-                <h3 className="font-display text-lg text-[#294439]">
+                <h3 className="font-display text-lg text-text-primary">
                     {title}
                 </h3>
 
-                <p className="mt-1 text-sm leading-6 text-[#7B877F]">
+                <p className="mt-1 text-sm leading-6 text-text-secondary">
                     {description}
                 </p>
             </div>
         </motion.div>
     );
 }
-
-/* =========================================================
-   HELPERS
-========================================================= */
 
 function formatCategory(category: CampaignCategory) {
     const labels: Record<CampaignCategory, string> = {

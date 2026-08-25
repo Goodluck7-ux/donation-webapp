@@ -21,7 +21,7 @@ const socialLinks = [
 
 export function Footer() {
     return (
-        <footer className="mt-24 bg-[#0B2418] text-white">
+        <footer className="mt-24 bg-brand text-white">
 
             {/* Main */}
             <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8 lg:px-10">
@@ -34,17 +34,17 @@ export function Footer() {
                             <Logo light />
                         </Link>
 
-                        <p className="mt-5 max-w-xs text-sm leading-6 text-[#D3E6D8]/55">
+                        <p className="mt-5 max-w-xs text-sm leading-6 text-white/55">
                             Supporting verified causes with transparency,
                             confidence, and a clearer connection to impact.
                         </p>
 
                         <div className="mt-6 flex items-center gap-4">
                             {socialLinks.map((social) => (
-                                <a
-                                    key={social.label}
+
+                                <a key={social.label}
                                     href={social.href}
-                                    className="text-xs text-[#B7E4C7]/45 transition-colors hover:text-[#B7E4C7]"
+                                    className="text-xs text-focus-ring/45 transition-colors hover:text-focus-ring"
                                 >
                                     {social.label}
                                 </a>
@@ -54,7 +54,7 @@ export function Footer() {
 
                     {/* Platform */}
                     <div>
-                        <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#B7E4C7]/40">
+                        <p className="text-xs font-semibold uppercase tracking-[0.14em] text-focus-ring/40">
                             Platform
                         </p>
 
@@ -63,7 +63,7 @@ export function Footer() {
                                 <Link
                                     key={link.href}
                                     href={link.href}
-                                    className="w-fit text-sm text-[#D3E6D8]/55 transition-colors hover:text-white"
+                                    className="w-fit text-sm text-white/55 transition-colors hover:text-white"
                                 >
                                     {link.label}
                                 </Link>
@@ -73,7 +73,7 @@ export function Footer() {
 
                     {/* Support */}
                     <div>
-                        <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#B7E4C7]/40">
+                        <p className="text-xs font-semibold uppercase tracking-[0.14em] text-focus-ring/40">
                             Support
                         </p>
 
@@ -82,7 +82,7 @@ export function Footer() {
                                 <Link
                                     key={link.href}
                                     href={link.href}
-                                    className="w-fit text-sm text-[#D3E6D8]/55 transition-colors hover:text-white"
+                                    className="w-fit text-sm text-white/55 transition-colors hover:text-white"
                                 >
                                     {link.label}
                                 </Link>
@@ -92,11 +92,11 @@ export function Footer() {
 
                     {/* Newsletter */}
                     <div>
-                        <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#B7E4C7]/40">
+                        <p className="text-xs font-semibold uppercase tracking-[0.14em] text-focus-ring/40">
                             Stay updated
                         </p>
 
-                        <p className="mt-5 text-sm leading-6 text-[#D3E6D8]/55">
+                        <p className="mt-5 text-sm leading-6 text-white/55">
                             Get occasional updates from causes and stories
                             you care about.
                         </p>
@@ -110,12 +110,12 @@ export function Footer() {
                                 required
                                 placeholder="Your email"
                                 aria-label="Email address"
-                                className="min-w-0 flex-1 rounded-lg border border-white/[0.08] bg-white/[0.05] px-3 py-2.5 text-sm text-white outline-none placeholder:text-[#B7E4C7]/30 focus:border-[#B7E4C7]/25"
+                                className="min-w-0 flex-1 rounded-lg border border-white/[0.08] bg-white/[0.05] px-3 py-2.5 text-sm text-white outline-none placeholder:text-focus-ring/30 focus:border-focus-ring/25"
                             />
 
                             <button
                                 type="submit"
-                                className="rounded-lg bg-[#B7E4C7] px-4 py-2.5 text-sm font-medium text-[#173B2B] transition-colors hover:bg-white"
+                                className="rounded-lg bg-focus-ring px-4 py-2.5 text-sm font-medium text-text-primary transition-colors hover:bg-white"
                             >
                                 Join
                             </button>
@@ -126,21 +126,21 @@ export function Footer() {
                 {/* Bottom */}
                 <div className="mt-14 flex flex-col gap-4 border-t border-white/[0.07] pt-6 sm:flex-row sm:items-center sm:justify-between">
 
-                    <p className="text-xs text-[#B7E4C7]/30">
+                    <p className="text-xs text-focus-ring/30">
                         © 2026 Finovia Giving. All rights reserved.
                     </p>
 
                     <div className="flex gap-5">
                         <Link
                             href="#"
-                            className="text-xs text-[#B7E4C7]/30 transition-colors hover:text-[#B7E4C7]/70"
+                            className="text-xs text-focus-ring/30 transition-colors hover:text-focus-ring/70"
                         >
                             Privacy
                         </Link>
 
                         <Link
                             href="#"
-                            className="text-xs text-[#B7E4C7]/30 transition-colors hover:text-[#B7E4C7]/70"
+                            className="text-xs text-focus-ring/30 transition-colors hover:text-focus-ring/70"
                         >
                             Terms
                         </Link>
