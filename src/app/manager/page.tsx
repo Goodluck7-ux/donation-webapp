@@ -286,7 +286,7 @@ export default function ManagerDashboard() {
                                     );
 
                                     const statusStyles =
-                                        getStatusStyles(campaign.status);
+                                        getStatusStyles(campaign.status ?? "UNKNOWN");
 
                                     return (
                                         <motion.div

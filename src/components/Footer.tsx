@@ -22,12 +22,9 @@ const socialLinks = [
 export function Footer() {
     return (
         <footer className="mt-24 bg-brand text-white">
-
             {/* Main */}
             <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8 lg:px-10">
-
                 <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-4 lg:gap-16">
-
                     {/* Brand */}
                     <div className="lg:col-span-1">
                         <Link href="/" className="inline-block">
@@ -41,8 +38,8 @@ export function Footer() {
 
                         <div className="mt-6 flex items-center gap-4">
                             {socialLinks.map((social) => (
-
-                                <a key={social.label}
+                                <a
+                                    key={social.label}
                                     href={social.href}
                                     className="text-xs text-focus-ring/45 transition-colors hover:text-focus-ring"
                                 >
@@ -101,10 +98,7 @@ export function Footer() {
                             you care about.
                         </p>
 
-                        <form
-                            onSubmit={(e) => e.preventDefault()}
-                            className="mt-4 flex gap-2"
-                        >
+                        <div className="mt-4 flex gap-2">
                             <input
                                 type="email"
                                 required
@@ -114,18 +108,17 @@ export function Footer() {
                             />
 
                             <button
-                                type="submit"
+                                type="button"
                                 className="rounded-lg bg-focus-ring px-4 py-2.5 text-sm font-medium text-text-primary transition-colors hover:bg-white"
                             >
                                 Join
                             </button>
-                        </form>
+                        </div>
                     </div>
                 </div>
 
                 {/* Bottom */}
                 <div className="mt-14 flex flex-col gap-4 border-t border-white/[0.07] pt-6 sm:flex-row sm:items-center sm:justify-between">
-
                     <p className="text-xs text-focus-ring/30">
                         © 2026 Finovia Giving. All rights reserved.
                     </p>
@@ -145,9 +138,7 @@ export function Footer() {
                             Terms
                         </Link>
                     </div>
-
                 </div>
-
             </div>
         </footer>
     );
