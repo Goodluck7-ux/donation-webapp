@@ -1,12 +1,14 @@
 'use client';
 
 import Link from 'next/link';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { useCampaigns } from '@/hooks/useCampaigns';
+import { usePublicStats } from '@/hooks/usePublicStats';
+import { useRecentDonations } from '@/hooks/useRecentDonations';
 
-const fadeUp = {
+const fadeUp = { 
   hidden: {
     opacity: 0,
     y: 24,
@@ -21,63 +23,15 @@ const fadeUp = {
   },
 };
 
-const impactStats = [
-  {
-    value: '₦12.4M',
-    label: 'Raised since 2024',
-    icon: '↗',
-  },
-  {
-    value: '184K+',
-    label: 'Donors worldwide',
-    icon: '◎',
-  },
-  {
-    value: '27',
-    label: 'Countries reached',
-    icon: '◉',
-  },
-  {
-    value: '312',
-    label: 'Projects funded',
-    icon: '✦',
-  },
-];
-
-const liveDonations = [
-  {
-    initial: 'J',
-    name: 'James T.',
-    location: 'United Kingdom',
-    campaign: 'Reforest the Amazon',
-    amount: '₦50,000',
-    time: 'Just now',
-  },
-  {
-    initial: 'A',
-    name: 'Anonymous',
-    location: 'United States',
-    campaign: 'Supporting Women in War Zones',
-    amount: '₦100,000',
-    time: 'Just now',
-  },
-  {
-    initial: 'P',
-    name: 'Priya K.',
-    location: 'India',
-    campaign: 'Clean Water for Rural Villages',
-    amount: '₦25,000',
-    time: '1m ago',
-  },
-  {
-    initial: 'E',
-    name: 'Emma R.',
-    location: 'Australia',
-    campaign: 'Women Battling Cancer & ALS',
-    amount: '₦200,000',
-    time: '2m ago',
-  },
-];
+function timeAgo(dateString: string) {
+  const seconds = Math.floor((Date.now() - new Date(dateString).getTime()) / 1000);
+  if (seconds < 60) return 'Just now';
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes}m ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h ago`;
+  return `${Math.floor(hours / 24)}d ago`;
+}
 
 const testimonials = [
   {
@@ -102,10 +56,37 @@ const testimonials = [
 
 export default function Home() {
   const { data: campaigns, isLoading } = useCampaigns();
+  const { data: stats } = usePublicStats();
+  const { data: recentDonations } = useRecentDonations();
+
+  const impactStats = [
+    {
+      value: stats ? `₦${(Number(stats.totalRaised) / 1_000_000).toFixed(1)}M` : '—',
+      label: 'Raised so far',
+      icon: '↗',
+    },
+    {
+      value: stats ? stats.totalDonors.toLocaleString() : '—',
+      label: 'Donors so far',
+      icon: '◎',
+    },
+    {
+      value: stats ? stats.activeCauses.toString() : '—',
+      label: 'Active causes',
+      icon: '◉',
+    },
+    {
+      value: campaigns ? campaigns.length.toString() : '—',
+      label: 'Total causes',
+      icon: '✦',
+    },
+  ];
 
   return (
     <main className="min-h-screen overflow-hidden bg-base text-text-primary">
       <Navbar />
+
+      {/*Hero Section*/}
 
       <section className="relative border-b border-border-subtle bg-base">
         <div className="pointer-events-none absolute -right-40 -top-40 h-[500px] w-[500px] rounded-full bg-subtle/40 blur-3xl" />
@@ -119,7 +100,7 @@ export default function Home() {
               className="inline-flex items-center gap-2 rounded-full border border-highlight/30 bg-highlight/10 px-4 py-2 text-xs font-semibold text-highlight sm:text-sm"
             >
               <span className="h-1.5 w-1.5 rounded-full bg-highlight" />
-              16,000+ donors · Fully transparent giving
+              {stats ? `${stats.totalDonors.toLocaleString()}+ donors` : '16,000+ donors'} · Fully transparent giving
             </motion.div>
 
             <motion.h1
@@ -179,9 +160,35 @@ export default function Home() {
                 Explore causes
               </Link>
             </motion.div>
+
+            {/* QUICK ACTIONS — always visible, no scrolling/hunting required */}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="mt-10 grid grid-cols-2 gap-2.5 sm:mt-12 sm:flex sm:flex-wrap sm:justify-center sm:gap-3"
+            >
+              {[
+                { href: '/campaigns', label: 'Browse causes', icon: '✦' },
+                { href: '/dashboard', label: 'My donations', icon: '♥' },
+                { href: '/impact', label: 'See our impact', icon: '◉' },
+                { href: '/login', label: 'Sign in', icon: '→' },
+              ].map((action) => (
+                <Link
+                  key={action.href}
+                  href={action.href}
+                  className="flex items-center justify-center gap-2 rounded-2xl border border-border-subtle bg-surface px-4 py-3.5 text-sm font-medium text-text-primary transition-all hover:-translate-y-0.5 hover:border-border-hover hover:shadow-[0_8px_20px_rgba(40,50,40,0.06)] sm:rounded-full sm:px-5 sm:py-2.5"
+                >
+                  <span className="text-accent-hover">{action.icon}</span>
+                  {action.label}
+                </Link>
+              ))}
+            </motion.div>
           </div>
         </div>
       </section>
+
+      {/*Total impact givings! */}
 
       <section className="bg-subtle px-5 py-14 sm:px-8 lg:px-10 lg:py-20">
         <div className="mx-auto max-w-6xl">
@@ -237,12 +244,13 @@ export default function Home() {
           </div>
 
           <p className="mt-5 text-center text-[11px] text-text-muted">
-            Updated in real time · Third-party verified · 100% transparent
+            Updated automatically · Pulled from live campaign data · 100% transparent
           </p>
         </div>
       </section>
 
-  
+      {/* Live donations...*/}
+
       <section className="bg-base px-5 py-20 sm:px-8 lg:px-10">
         <div className="mx-auto max-w-6xl">
           <motion.div
@@ -263,7 +271,9 @@ export default function Home() {
               </h2>
 
               <p className="mt-2 text-sm text-text-secondary">
-                Join 16,865 donors making an impact today.
+                {stats
+                  ? `${stats.totalDonors.toLocaleString()} donors making an impact.`
+                  : 'Real donations, updated live.'}
               </p>
             </div>
 
@@ -274,52 +284,55 @@ export default function Home() {
           </motion.div>
 
           <div className="grid gap-3 md:grid-cols-2">
-            {liveDonations.map((donation, index) => (
-              <motion.div
-                key={`${donation.name}-${index}`}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: '-70px' }}
-                variants={fadeUp}
-                transition={{ delay: index * 0.08 }}
-                className="flex items-center justify-between rounded-2xl border border-border-subtle bg-surface p-4 shadow-[0_5px_25px_rgba(40,50,40,0.03)] transition-shadow hover:shadow-[0_10px_30px_rgba(40,50,40,0.06)]"
-              >
-                <div className="flex min-w-0 items-center gap-3">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent/10 text-sm font-bold text-accent-hover">
-                    {donation.initial}
-                  </div>
+            <AnimatePresence mode="popLayout">
+              {recentDonations?.length ? (
+                recentDonations.map((donation) => (
+                  <motion.div
+                    key={donation.id}
+                    layout
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    className="flex items-center justify-between rounded-2xl border border-border-subtle bg-surface p-4 shadow-[0_5px_25px_rgba(40,50,40,0.03)] transition-shadow hover:shadow-[0_10px_30px_rgba(40,50,40,0.06)]"
+                  >
+                    <div className="flex min-w-0 items-center gap-3">
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent/10 text-sm font-bold text-accent-hover">
+                        {donation.name[0]?.toUpperCase() ?? '?'}
+                      </div>
 
-                  <div className="min-w-0">
-                    <div className="flex flex-wrap items-center gap-x-1.5">
-                      <p className="text-sm font-semibold text-text-primary">
-                        {donation.name}
-                      </p>
+                      <div className="min-w-0">
+                        <div className="flex flex-wrap items-center gap-x-1.5">
+                          <p className="text-sm font-semibold text-text-primary">
+                            {donation.name}
+                          </p>
+                        </div>
 
-                      <span className="text-xs text-text-muted">
-                        from {donation.location}
-                      </span>
+                        <p className="mt-0.5 truncate text-xs text-text-muted">
+                          donated to{' '}
+                          <span className="font-medium text-accent-hover">
+                            {donation.campaignTitle}
+                          </span>
+                        </p>
+                      </div>
                     </div>
 
-                    <p className="mt-0.5 truncate text-xs text-text-muted">
-                      donated to{' '}
-                      <span className="font-medium text-accent-hover">
-                        {donation.campaign}
-                      </span>
-                    </p>
-                  </div>
-                </div>
+                    <div className="ml-3 shrink-0 text-right">
+                      <p className="text-sm font-bold text-accent-hover">
+                        ₦{Number(donation.amount).toLocaleString()}
+                      </p>
 
-                <div className="ml-3 shrink-0 text-right">
-                  <p className="text-sm font-bold text-accent-hover">
-                    {donation.amount}
-                  </p>
-
-                  <p className="mt-0.5 text-[10px] text-text-muted">
-                    {donation.time}
-                  </p>
+                      <p className="mt-0.5 text-[10px] text-text-muted">
+                        {timeAgo(donation.createdAt)}
+                      </p>
+                    </div>
+                  </motion.div>
+                ))
+              ) : (
+                <div className="col-span-1 md:col-span-2 rounded-2xl border border-dashed border-border-subtle bg-surface px-6 py-10 text-center text-sm text-text-muted">
+                  No donations yet — be the first to give.
                 </div>
-              </motion.div>
-            ))}
+              )}
+            </AnimatePresence>
           </div>
 
           <div className="mt-7 flex flex-col items-center justify-between gap-4 rounded-2xl border border-border-subtle bg-subtle px-5 py-4 sm:flex-row">
@@ -342,6 +355,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/*Campaigns data... live! */}
 
       <section className="bg-subtle px-5 py-20 sm:px-8 lg:px-10">
         <div className="mx-auto max-w-6xl">
@@ -507,6 +522,8 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Tstimonies*/}
+
       <section className="bg-base px-5 py-20 sm:px-8 lg:px-10">
         <div className="mx-auto max-w-6xl">
           <motion.div
@@ -558,6 +575,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+
 
 
       <section className="px-5 py-10 sm:px-8 lg:px-10 lg:py-16">

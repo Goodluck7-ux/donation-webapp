@@ -15,6 +15,7 @@ import {
     X,
     ArrowUpRight,
     Sparkles,
+    Building2,
 } from 'lucide-react';
 
 import { apiFetch } from '@/lib/api';
@@ -41,8 +42,10 @@ const NAV_BY_ROLE: Record<string, NavItem[]> = {
         { label: 'My campaigns', href: '/manager/campaigns', icon: FolderKanban },
         { label: 'Profile', href: '/dashboard/profile', icon: User },
     ],
+
     PLATFORM_ADMIN: [
         { label: 'Overview', href: '/admin', icon: LayoutDashboard },
+        { label: 'Organizations', href: '/admin/organizations', icon: Building2 },
         { label: 'Campaigns', href: '/admin/campaigns', icon: FolderKanban },
         { label: 'Users', href: '/admin/users', icon: Users },
         { label: 'Profile', href: '/dashboard/profile', icon: User },
