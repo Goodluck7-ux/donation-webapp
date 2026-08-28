@@ -4,13 +4,20 @@ import { X } from 'lucide-react';
 import { authClient } from '@/lib/auth-client';
 import { logActivity } from '@/lib/logger';
 
-export function OAuthButtons({ callbackURL = '/dashboard' }: { callbackURL?: string }) {
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL!;
+
+export function OAuthButtons({
+    callbackURL = '/dashboard',
+}: {
+    callbackURL?: string;
+}) {
     function handleOAuth(provider: 'google' | 'github') {
         logActivity('AUTH', `OAuth sign-in initiated: ${provider}`);
+
         authClient.signIn.social({
             provider,
-            callbackURL: '/dashboard',
-            errorCallbackURL: '/login?oauth_error=1',
+            callbackURL: `${APP_URL}${callbackURL}`,
+            errorCallbackURL: `${APP_URL}/login?oauth_error=1`,
         });
     }
 
