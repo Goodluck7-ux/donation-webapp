@@ -7,7 +7,11 @@ import { logActivity } from '@/lib/logger';
 export function OAuthButtons({ callbackURL = '/dashboard' }: { callbackURL?: string }) {
     function handleOAuth(provider: 'google' | 'github') {
         logActivity('AUTH', `OAuth sign-in initiated: ${provider}`);
-        authClient.signIn.social({ provider, callbackURL });
+        authClient.signIn.social({
+            provider,
+            callbackURL: '/dashboard',
+            errorCallbackURL: '/login?oauth_error=1',
+        });
     }
 
     return (
