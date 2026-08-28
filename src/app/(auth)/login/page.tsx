@@ -81,11 +81,7 @@ function LoginContent() {
 
     return (
         <main className="min-h-screen bg-base grid lg:grid-cols-[1.05fr_0.95fr] overflow-hidden">
-            {oauthError && (
-                <div className="rounded-xl border border-red-200 bg-red-50 dark:border-red-900/40 dark:bg-red-500/10 px-4 py-3 text-sm text-red-700 dark:text-red-400">
-                    Something went wrong signing in — please try again.
-                </div>
-            )}
+
 
             {/* LEFT BRAND EXPERIENCE */}
             <section className="hidden lg:flex relative overflow-hidden bg-brand p-10 xl:p-14">
@@ -358,6 +354,11 @@ function LoginContent() {
                             </Link>
                         </p>
                     </motion.div>
+                    {oauthError && (
+                        <div className="rounded-xl border border-red-200 bg-red-50 dark:border-red-900/40 dark:bg-red-500/10 px-4 py-3 text-sm text-red-700 dark:text-red-400">
+                            Something went wrong signing in — please try again.
+                        </div>
+                    )}
 
                     <motion.div
                         variants={itemVariants}
