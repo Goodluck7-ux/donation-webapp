@@ -35,29 +35,58 @@ export default function RegisterPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
+    const [registered, setRegistered] = useState(false);
 
     const router = useRouter();
     const register = useRegister();
 
+    // function handleSubmit(e: React.FormEvent) {
+    //     e.preventDefault();
+
+    //     register.mutate(
+    //         { name, email, password },
+    //         {
+    //             onSuccess: (data) => {
+    //                 toast.success(`Welcome, ${data.user.name.split(' ')[0]}!`);
+    //                 const role = data.user.role;
+
+    //                 if (role === 'PLATFORM_ADMIN' || role === 'ORG_ADMIN' || role === 'VERIFICATION_STAFF') {
+    //                     router.push('/admin');
+    //                 } else if (role === 'CAMPAIGN_MANAGER') {
+    //                     router.push('/manager');
+    //                 } else {
+    //                     router.push('/dashboard');
+    //                 }
+    //             },
+    //         },
+    //     );
+    // }
     function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
 
         register.mutate(
             { name, email, password },
             {
-                onSuccess: (data) => {
-                    toast.success(`Welcome, ${data.user.name.split(' ')[0]}!`);
-                    const role = data.user.role;
-
-                    if (role === 'PLATFORM_ADMIN' || role === 'ORG_ADMIN' || role === 'VERIFICATION_STAFF') {
-                        router.push('/admin');
-                    } else if (role === 'CAMPAIGN_MANAGER') {
-                        router.push('/manager');
-                    } else {
-                        router.push('/dashboard');
-                    }
+                onSuccess: () => {
+                    setRegistered(true); // new state — shows a "check your email" screen instead of redirecting
                 },
             },
+        );
+    }
+
+    if (registered) {
+        return (
+            <main className="min-h-screen bg-base flex items-center justify-center px-5">
+                <div className="max-w-md text-center space-y-4">
+                    <h1 className="font-display text-3xl text-text-primary">Check your email</h1>
+                    <p className="text-text-secondary">
+                        We sent a verification link to <strong>{email}</strong>. Click it to activate your account, then sign in.
+                    </p>
+                    <Link href="/login" className="inline-block rounded-lg bg-accent text-white px-6 py-3 font-medium hover:bg-accent-hover">
+                        Go to login
+                    </Link>
+                </div>
+            </main>
         );
     }
 
@@ -241,6 +270,7 @@ export default function RegisterPage() {
                     <motion.div variants={itemVariants} className="mt-5">
                         <OAuthButtons />
                     </motion.div>
+
 
                     <motion.div variants={itemVariants} className="mt-8 text-center">
                         <p className="text-sm text-text-secondary">

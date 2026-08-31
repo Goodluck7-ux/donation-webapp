@@ -19,6 +19,7 @@ import { Logo } from '@/components/Logo';
 import { AuthDivider } from '@/components/AuthDivider';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { OAuthButtons } from '@/components/oAuthButtons';
+import { authClient } from '@/lib/auth-client';
 
 
 const containerVariants: Variants = {
@@ -49,7 +50,37 @@ function LoginContent() {
     const searchParams = useSearchParams();
     const redirectTo = searchParams.get('redirect');
     const oauthError = searchParams.get('oauth_error');
+    const [needsVerification, setNeedsVerification] = useState(false);
+    const [resendEmail, setResendEmail] = useState('');
 
+    // function handleSubmit(e: React.FormEvent) {
+    //     e.preventDefault();
+
+    //     login.mutate(
+    //         { email, password },
+    //         {
+    //             onSuccess: (data) => {
+    //                 toast.success(
+    //                     `Welcome back, ${data.user.name.split(' ')[0]}!`
+    //                 );
+
+    //                 const role = data.user.role;
+
+    //                 if (
+    //                     role === 'PLATFORM_ADMIN' ||
+    //                     role === 'ORG_ADMIN' ||
+    //                     role === 'VERIFICATION_STAFF'
+    //                 ) {
+    //                     router.push('/admin');
+    //                 } else if (role === 'CAMPAIGN_MANAGER') {
+    //                     router.push('/manager');
+    //                 } else {
+    //                     router.push(redirectTo || '/dashboard');
+    //                 }
+    //             },
+    //         },
+    //     );
+    // }
     function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
 
@@ -75,8 +106,23 @@ function LoginContent() {
                         router.push(redirectTo || '/dashboard');
                     }
                 },
+                onError: (err) => {
+                    const message = (err as Error).message;
+                    if (message.toLowerCase().includes('verify')) {
+                        setNeedsVerification(true);
+                        setResendEmail(email);
+                    }
+                },
             },
         );
+    }
+
+    async function handleResend() {
+        await authClient.sendVerificationEmail({
+            email: resendEmail,
+            callbackURL: '/login?verified=1',
+        });
+        toast.success('Verification email resent.');
     }
 
     return (
@@ -339,6 +385,15 @@ function LoginContent() {
                     >
                         <OAuthButtons />
                     </motion.div>
+                    
+                    {needsVerification && (
+                        <div className="rounded-xl border border-amber-200 bg-amber-50 dark:border-amber-900/40 dark:bg-amber-500/10 px-4 py-3 text-sm text-amber-800 dark:text-amber-400 space-y-2">
+                            <p>Your email isn't verified yet.</p>
+                            <button type="button" onClick={handleResend} className="font-semibold underline">
+                                Resend verification email
+                            </button>
+                        </div>
+                    )}
 
                     <motion.div
                         variants={itemVariants}
