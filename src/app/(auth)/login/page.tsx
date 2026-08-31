@@ -354,11 +354,11 @@ function LoginContent() {
                             </Link>
                         </p>
                     </motion.div>
-                    {oauthError && (
+                    {/* {oauthError && (
                         <div className="rounded-xl border border-red-200 bg-red-50 dark:border-red-900/40 dark:bg-red-500/10 px-4 py-3 text-sm text-red-700 dark:text-red-400">
                             Something went wrong signing in — please try again.
                         </div>
-                    )}
+                    )} */}
 
                     <motion.div
                         variants={itemVariants}
