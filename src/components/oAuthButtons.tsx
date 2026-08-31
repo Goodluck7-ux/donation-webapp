@@ -16,7 +16,7 @@ export function OAuthButtons({
 
         authClient.signIn.social({
             provider,
-            callbackURL: `${APP_URL}${callbackURL}`,
+            callbackURL: '/dashboard',
             errorCallbackURL: `${APP_URL}/login?oauth_error=1`,
         });
     }
