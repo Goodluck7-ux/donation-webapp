@@ -7,7 +7,7 @@ import { logActivity } from '@/lib/logger';
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL!;
 
 export function OAuthButtons({
-    callbackURL = '/dashboard',
+    callbackURL = '/dashboard'
 }: {
     callbackURL?: string;
 }) {
@@ -16,7 +16,7 @@ export function OAuthButtons({
 
         authClient.signIn.social({
             provider,
-            callbackURL: '/dashboard',
+            callbackURL: `${APP_URL}${callbackURL}`,
             errorCallbackURL: `${APP_URL}/login?oauth_error=1`,
         });
     }
