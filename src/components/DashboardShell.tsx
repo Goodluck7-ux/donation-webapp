@@ -78,8 +78,9 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
     }
 
     return (
-        <div className="flex h-full flex-col justify-between">
-            <div>
+        <div className="flex h-full flex-col">
+            {/* FIXED TOP */}
+            <div className="shrink-0">
                 <div className="flex items-center justify-between">
                     <Link href="/" onClick={onNavigate} className="block">
                         <Logo light />
@@ -96,37 +97,39 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
                         Every contribution helps move a meaningful cause forward.
                     </p>
                 </div>
-
-                <nav className="mt-9 space-y-1.5">
-                    <p className="mb-3 px-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#B7E4C7]/35">Workspace</p>
-                    {items.map((item) => {
-                        const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
-                        const Icon = item.icon;
-                        return (
-                            <Link
-                                key={item.href}
-                                href={item.href}
-                                onClick={onNavigate}
-                                className={`group relative flex items-center gap-3 rounded-xl px-3.5 py-3 text-sm transition-all ${active ? 'bg-white/[0.10] font-semibold text-white shadow-[0_8px_20px_rgba(0,0,0,0.08)]' : 'font-medium text-[#D3E6D8]/55 hover:bg-white/[0.055] hover:text-white'}`}
-                            >
-                                {active && (
-                                    <motion.span
-                                        layoutId="active-nav"
-                                        className="absolute left-0 top-1/2 h-5 w-0.5 -translate-y-1/2 rounded-full bg-[#74C69D]"
-                                    />
-                                )}
-                                <span className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${active ? 'bg-[#B7E4C7]/10 text-[#B7E4C7]' : 'text-[#B7E4C7]/45 group-hover:text-[#B7E4C7]'}`}>
-                                    <Icon size={17} strokeWidth={1.8} />
-                                </span>
-                                <span>{item.label}</span>
-                                {active && <ArrowUpRight size={14} className="ml-auto text-[#B7E4C7]/60" />}
-                            </Link>
-                        );
-                    })}
-                </nav>
             </div>
 
-            <div className="border-t border-white/[0.08] pt-5">
+            {/* SCROLLABLE NAV — grows to fill space, scrolls internally when it overflows */}
+            <nav className="mt-9 flex-1 space-y-1.5 overflow-y-auto pr-1">
+                <p className="mb-3 px-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#B7E4C7]/35">Workspace</p>
+                {items.map((item) => {
+                    const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
+                    const Icon = item.icon;
+                    return (
+                        <Link
+                            key={item.href}
+                            href={item.href}
+                            onClick={onNavigate}
+                            className={`group relative flex items-center gap-3 rounded-xl px-3.5 py-3 text-sm transition-all ${active ? 'bg-white/[0.10] font-semibold text-white shadow-[0_8px_20px_rgba(0,0,0,0.08)]' : 'font-medium text-[#D3E6D8]/55 hover:bg-white/[0.055] hover:text-white'}`}
+                        >
+                            {active && (
+                                <motion.span
+                                    layoutId="active-nav"
+                                    className="absolute left-0 top-1/2 h-5 w-0.5 -translate-y-1/2 rounded-full bg-[#74C69D]"
+                                />
+                            )}
+                            <span className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${active ? 'bg-[#B7E4C7]/10 text-[#B7E4C7]' : 'text-[#B7E4C7]/45 group-hover:text-[#B7E4C7]'}`}>
+                                <Icon size={17} strokeWidth={1.8} />
+                            </span>
+                            <span>{item.label}</span>
+                            {active && <ArrowUpRight size={14} className="ml-auto text-[#B7E4C7]/60" />}
+                        </Link>
+                    );
+                })}
+            </nav>
+
+            {/* FIXED BOTTOM */}
+            <div className="shrink-0 border-t border-white/[0.08] pt-5">
                 <div className="flex items-center gap-3 px-1">
                     <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#B7E4C7]/10 bg-[#B7E4C7]/10 text-sm font-semibold text-[#DFF1E4]">
                         {profile?.name?.[0]?.toUpperCase() ?? '?'}

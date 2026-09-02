@@ -12,6 +12,7 @@ import { useProfile } from '@/hooks/userProfile';
 import { apiFetch } from '@/lib/api';
 import { useQueryClient } from '@tanstack/react-query';
 
+
 const LINKS = [
     { href: '/', label: 'Home' },
     { href: '/campaigns', label: 'Causes' },

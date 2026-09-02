@@ -7,8 +7,12 @@ import { Footer } from '@/components/Footer';
 import { useCampaigns } from '@/hooks/useCampaigns';
 import { usePublicStats } from '@/hooks/usePublicStats';
 import { useRecentDonations } from '@/hooks/useRecentDonations';
+import { apiFetch } from '@/lib/api';
+import { useQueryClient } from '@tanstack/react-query';
+import { useProfile } from '@/hooks/userProfile';
+import { dashboardPathFor } from '@/lib/dashboardPath';
 
-const fadeUp = { 
+const fadeUp = {
   hidden: {
     opacity: 0,
     y: 24,
@@ -81,6 +85,15 @@ export default function Home() {
       icon: '✦',
     },
   ];
+
+  const { data: profile } = useProfile();
+  const queryClient = useQueryClient();
+
+  async function handleSignOut() {
+    await apiFetch('/api/auth/sign-out', { method: 'POST' });
+    queryClient.clear();
+    window.location.href = '/';
+  }
 
   return (
     <main className="min-h-screen overflow-hidden bg-base text-text-primary">
@@ -161,28 +174,73 @@ export default function Home() {
               </Link>
             </motion.div>
 
-            {/* QUICK ACTIONS — always visible, no scrolling/hunting required */}
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
               className="mt-10 grid grid-cols-2 gap-2.5 sm:mt-12 sm:flex sm:flex-wrap sm:justify-center sm:gap-3"
             >
-              {[
-                { href: '/campaigns', label: 'Browse causes', icon: '✦' },
-                { href: '/dashboard', label: 'My donations', icon: '♥' },
-                { href: '/impact', label: 'See our impact', icon: '◉' },
-                { href: '/login', label: 'Sign in', icon: '→' },
-              ].map((action) => (
+              <Link
+                href="/campaigns"
+                className="flex items-center justify-center gap-2 rounded-2xl border border-border-subtle bg-surface px-4 py-3.5 text-sm font-medium text-text-primary transition-all hover:-translate-y-0.5 hover:border-border-hover hover:shadow-[0_8px_20px_rgba(40,50,40,0.06)] sm:rounded-full sm:px-5 sm:py-2.5"
+              >
+                <span className="text-accent-hover">✦</span>
+                Browse causes
+              </Link>
+
+              {profile ? (
                 <Link
-                  key={action.href}
-                  href={action.href}
+                  href="/dashboard/donations"
                   className="flex items-center justify-center gap-2 rounded-2xl border border-border-subtle bg-surface px-4 py-3.5 text-sm font-medium text-text-primary transition-all hover:-translate-y-0.5 hover:border-border-hover hover:shadow-[0_8px_20px_rgba(40,50,40,0.06)] sm:rounded-full sm:px-5 sm:py-2.5"
                 >
-                  <span className="text-accent-hover">{action.icon}</span>
-                  {action.label}
+                  <span className="text-accent-hover">♥</span>
+                  My donations
                 </Link>
-              ))}
+              ) : (
+                <Link
+                  href="/dashboard"
+                  className="flex items-center justify-center gap-2 rounded-2xl border border-border-subtle bg-surface px-4 py-3.5 text-sm font-medium text-text-primary transition-all hover:-translate-y-0.5 hover:border-border-hover hover:shadow-[0_8px_20px_rgba(40,50,40,0.06)] sm:rounded-full sm:px-5 sm:py-2.5"
+                >
+                  <span className="text-accent-hover">♥</span>
+                  My donations
+                </Link>
+              )}
+
+              <Link
+                href="/impact"
+                className="flex items-center justify-center gap-2 rounded-2xl border border-border-subtle bg-surface px-4 py-3.5 text-sm font-medium text-text-primary transition-all hover:-translate-y-0.5 hover:border-border-hover hover:shadow-[0_8px_20px_rgba(40,50,40,0.06)] sm:rounded-full sm:px-5 sm:py-2.5"
+              >
+                <span className="text-accent-hover">◉</span>
+                See our impact
+              </Link>
+
+              {profile ? (
+                <>
+                  <Link
+                    href={dashboardPathFor(profile.role)}
+                    className="flex items-center justify-center gap-2 rounded-2xl border border-accent bg-accent/10 px-4 py-3.5 text-sm font-semibold text-accent-hover transition-all hover:-translate-y-0.5 hover:bg-accent/15 sm:rounded-full sm:px-5 sm:py-2.5"
+                  >
+                    <span>→</span>
+                    View my dashboard
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={handleSignOut}
+                    className="flex items-center justify-center gap-2 rounded-2xl border border-border-subtle bg-surface px-4 py-3.5 text-sm font-medium text-text-secondary transition-all hover:-translate-y-0.5 hover:border-border-hover hover:text-text-primary sm:rounded-full sm:px-5 sm:py-2.5"
+                  >
+                    <span>↩</span>
+                    Sign out
+                  </button>
+                </>
+              ) : (
+                <Link
+                  href="/login"
+                  className="flex items-center justify-center gap-2 rounded-2xl border border-border-subtle bg-surface px-4 py-3.5 text-sm font-medium text-text-primary transition-all hover:-translate-y-0.5 hover:border-border-hover hover:shadow-[0_8px_20px_rgba(40,50,40,0.06)] sm:rounded-full sm:px-5 sm:py-2.5"
+                >
+                  <span className="text-accent-hover">→</span>
+                  Sign in
+                </Link>
+              )}
             </motion.div>
           </div>
         </div>
