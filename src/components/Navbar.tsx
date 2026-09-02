@@ -2,12 +2,15 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { AnimatePresence, motion } from 'motion/react';
-import { ArrowUpRight, Menu, X } from 'lucide-react';
+import { ArrowUpRight, LayoutDashboard, LogOut, Menu, User, X } from 'lucide-react';
 
 import { Logo } from './Logo';
 import { ThemeToggle } from './ThemeToggle';
+import { useProfile } from '@/hooks/userProfile';
+import { apiFetch } from '@/lib/api';
+import { useQueryClient } from '@tanstack/react-query';
 
 const LINKS = [
     { href: '/', label: 'Home' },
@@ -17,14 +20,31 @@ const LINKS = [
     { href: '/contact', label: 'Contact' },
 ];
 
+function dashboardPathFor(role?: string) {
+    if (role === 'PLATFORM_ADMIN' || role === 'ORG_ADMIN' || role === 'VERIFICATION_STAFF') return '/admin';
+    if (role === 'CAMPAIGN_MANAGER') return '/manager';
+    return '/dashboard';
+}
+
 export function Navbar() {
     const [open, setOpen] = useState(false);
+    const [menuOpen, setMenuOpen] = useState(false);
     const pathname = usePathname();
+    const router = useRouter();
+    const queryClient = useQueryClient();
+    const { data: profile, isLoading } = useProfile();
 
     const isActive = (href: string) => {
         if (href === '/') return pathname === '/';
         return pathname === href || pathname.startsWith(`${href}/`);
     };
+
+    async function handleSignOut() {
+        await apiFetch('/api/auth/sign-out', { method: 'POST' });
+        queryClient.clear();
+        router.push('/');
+        router.refresh();
+    }
 
     return (
         <header className="sticky top-0 z-50 border-b border-border bg-base/90 backdrop-blur-xl">
@@ -56,17 +76,76 @@ export function Navbar() {
                 <div className="hidden items-center gap-5 md:flex">
                     <ThemeToggle />
 
-                    <Link href="/login" className="text-sm font-medium text-text-secondary transition-colors hover:text-text-primary">
-                        Log in
-                    </Link>
+                    {isLoading ? (
+                        <div className="h-9 w-24 animate-pulse rounded-full bg-subtle" />
+                    ) : profile ? (
+                        <div className="relative">
+                            <button
+                                onClick={() => setMenuOpen((v) => !v)}
+                                className="flex items-center gap-2.5 rounded-full border border-border bg-surface py-1.5 pl-1.5 pr-3.5 transition-colors hover:border-border-hover"
+                            >
+                                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-accent text-xs font-semibold text-white">
+                                    {profile.name?.[0]?.toUpperCase() ?? '?'}
+                                </span>
+                                <span className="text-sm font-medium text-text-primary">
+                                    {profile.name?.split(' ')[0]}
+                                </span>
+                            </button>
 
-                    <Link
-                        href="/campaigns"
-                        className="group inline-flex items-center gap-2 rounded-xl bg-accent px-4 py-2.5 text-sm font-semibold text-white shadow-[0_8px_20px_rgba(27,67,50,0.14)] transition-all hover:-translate-y-0.5 hover:bg-accent-hover hover:shadow-[0_12px_26px_rgba(27,67,50,0.18)]"
-                    >
-                        Donate now
-                        <ArrowUpRight size={15} className="transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-                    </Link>
+                            <AnimatePresence>
+                                {menuOpen && (
+                                    <>
+                                        <div className="fixed inset-0 z-10" onClick={() => setMenuOpen(false)} />
+                                        <motion.div
+                                            initial={{ opacity: 0, y: -6 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            exit={{ opacity: 0, y: -6 }}
+                                            transition={{ duration: 0.15 }}
+                                            className="absolute right-0 top-full z-20 mt-2 w-52 overflow-hidden rounded-xl border border-border bg-surface p-1.5 shadow-[0_12px_30px_rgba(0,0,0,0.12)]"
+                                        >
+                                            <Link
+                                                href={dashboardPathFor(profile.role)}
+                                                onClick={() => setMenuOpen(false)}
+                                                className="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium text-text-primary transition-colors hover:bg-base"
+                                            >
+                                                <LayoutDashboard size={16} />
+                                                Go to dashboard
+                                            </Link>
+                                            <Link
+                                                href="/dashboard/profile"
+                                                onClick={() => setMenuOpen(false)}
+                                                className="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium text-text-primary transition-colors hover:bg-base"
+                                            >
+                                                <User size={16} />
+                                                Profile
+                                            </Link>
+                                            <button
+                                                onClick={() => { setMenuOpen(false); handleSignOut(); }}
+                                                className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium text-text-secondary transition-colors hover:bg-base hover:text-text-primary"
+                                            >
+                                                <LogOut size={16} />
+                                                Sign out
+                                            </button>
+                                        </motion.div>
+                                    </>
+                                )}
+                            </AnimatePresence>
+                        </div>
+                    ) : (
+                        <>
+                            <Link href="/login" className="text-sm font-medium text-text-secondary transition-colors hover:text-text-primary">
+                                Log in
+                            </Link>
+
+                            <Link
+                                href="/campaigns"
+                                className="group inline-flex items-center gap-2 rounded-xl bg-accent px-4 py-2.5 text-sm font-semibold text-white shadow-[0_8px_20px_rgba(27,67,50,0.14)] transition-all hover:-translate-y-0.5 hover:bg-accent-hover hover:shadow-[0_12px_26px_rgba(27,67,50,0.18)]"
+                            >
+                                Donate now
+                                <ArrowUpRight size={15} className="transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                            </Link>
+                        </>
+                    )}
                 </div>
 
                 <div className="flex items-center gap-2 md:hidden">
@@ -117,22 +196,55 @@ export function Navbar() {
                             </div>
 
                             <div className="mt-4 border-t border-border pt-4">
-                                <Link
-                                    href="/login"
-                                    onClick={() => setOpen(false)}
-                                    className="flex items-center justify-center rounded-xl px-4 py-3 text-sm font-semibold text-text-primary transition-colors hover:bg-surface"
-                                >
-                                    Log in
-                                </Link>
+                                {profile ? (
+                                    <>
+                                        <div className="flex items-center gap-3 px-3.5 py-2">
+                                            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-accent text-sm font-semibold text-white">
+                                                {profile.name?.[0]?.toUpperCase() ?? '?'}
+                                            </span>
+                                            <div>
+                                                <p className="text-sm font-semibold text-text-primary">{profile.name}</p>
+                                                <p className="text-xs text-text-muted">{profile.email}</p>
+                                            </div>
+                                        </div>
 
-                                <Link
-                                    href="/campaigns"
-                                    onClick={() => setOpen(false)}
-                                    className="group mt-2 flex items-center justify-center gap-2 rounded-xl bg-accent px-4 py-3 text-sm font-semibold text-white shadow-[0_8px_20px_rgba(27,67,50,0.12)] transition-all hover:bg-accent-hover"
-                                >
-                                    Donate now
-                                    <ArrowUpRight size={15} className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-                                </Link>
+                                        <Link
+                                            href={dashboardPathFor(profile.role)}
+                                            onClick={() => setOpen(false)}
+                                            className="mt-2 flex items-center justify-center gap-2 rounded-xl bg-accent px-4 py-3 text-sm font-semibold text-white transition-all hover:bg-accent-hover"
+                                        >
+                                            <LayoutDashboard size={16} />
+                                            Go to dashboard
+                                        </Link>
+
+                                        <button
+                                            onClick={() => { setOpen(false); handleSignOut(); }}
+                                            className="mt-2 flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold text-text-secondary transition-colors hover:bg-surface hover:text-text-primary"
+                                        >
+                                            <LogOut size={16} />
+                                            Sign out
+                                        </button>
+                                    </>
+                                ) : (
+                                    <>
+                                        <Link
+                                            href="/login"
+                                            onClick={() => setOpen(false)}
+                                            className="flex items-center justify-center rounded-xl px-4 py-3 text-sm font-semibold text-text-primary transition-colors hover:bg-surface"
+                                        >
+                                            Log in
+                                        </Link>
+
+                                        <Link
+                                            href="/campaigns"
+                                            onClick={() => setOpen(false)}
+                                            className="group mt-2 flex items-center justify-center gap-2 rounded-xl bg-accent px-4 py-3 text-sm font-semibold text-white shadow-[0_8px_20px_rgba(27,67,50,0.12)] transition-all hover:bg-accent-hover"
+                                        >
+                                            Donate now
+                                            <ArrowUpRight size={15} className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                                        </Link>
+                                    </>
+                                )}
                             </div>
 
                             <p className="mt-5 text-center text-[10px] text-text-muted">
