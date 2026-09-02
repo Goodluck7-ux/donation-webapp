@@ -16,6 +16,8 @@ import {
     ArrowUpRight,
     Sparkles,
     Building2,
+    Home,
+    Receipt,
 } from 'lucide-react';
 
 import { apiFetch } from '@/lib/api';
@@ -33,20 +35,24 @@ type NavItem = {
 
 const NAV_BY_ROLE: Record<string, NavItem[]> = {
     DONOR: [
+        { label: 'Home', href: '/', icon: Home },
         { label: 'Overview', href: '/dashboard', icon: LayoutDashboard },
         { label: 'My donations', href: '/dashboard/donations', icon: Heart },
         { label: 'Profile', href: '/dashboard/profile', icon: User },
     ],
     CAMPAIGN_MANAGER: [
+        { label: 'Home', href: '/', icon: Home },
         { label: 'Overview', href: '/manager', icon: LayoutDashboard },
         { label: 'My campaigns', href: '/manager/campaigns', icon: FolderKanban },
         { label: 'Profile', href: '/dashboard/profile', icon: User },
     ],
 
     PLATFORM_ADMIN: [
+        { label: 'Home', href: '/', icon: Home },
         { label: 'Overview', href: '/admin', icon: LayoutDashboard },
         { label: 'Organizations', href: '/admin/organizations', icon: Building2 },
         { label: 'Campaigns', href: '/admin/campaigns', icon: FolderKanban },
+        { label: 'Transactions', href: '/admin/transactions', icon: Receipt },
         { label: 'Users', href: '/admin/users', icon: Users },
         { label: 'Profile', href: '/dashboard/profile', icon: User },
     ],

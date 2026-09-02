@@ -116,3 +116,27 @@ export function useUpdateCampaign() {
         },
     });
 }
+
+export interface AdminDonation {
+    id: string;
+    amount: string;
+    status: string;
+    email: string;
+    donorName: string | null;
+    anonymous: boolean;
+    createdAt: string;
+    campaign: { id: string; title: string };
+    donor: { name: string; email: string } | null;
+}
+
+export function useAllDonations() {
+    return useQuery({
+        queryKey: ['admin-donations'],
+        queryFn: async () => {
+            logActivity('PAYMENT', 'Fetching all donations (admin)');
+            const data = await apiFetch<AdminDonation[]>('/donations/admin/all');
+            logActivity('PAYMENT', 'Admin donations loaded', { count: data.length });
+            return data;
+        },
+    });
+}
