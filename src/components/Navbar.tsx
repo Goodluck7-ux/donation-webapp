@@ -8,10 +8,10 @@ import { ArrowUpRight, LayoutDashboard, LogOut, Menu, User, X } from 'lucide-rea
 
 import { Logo } from './Logo';
 import { ThemeToggle } from './ThemeToggle';
+import { ConfirmSignOutModal } from './ConfirmSignOutModal';
 import { useProfile } from '@/hooks/userProfile';
 import { apiFetch } from '@/lib/api';
 import { useQueryClient } from '@tanstack/react-query';
-
 
 const LINKS = [
     { href: '/', label: 'Home' },
@@ -30,6 +30,7 @@ function dashboardPathFor(role?: string) {
 export function Navbar() {
     const [open, setOpen] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
+    const [confirmOpen, setConfirmOpen] = useState(false);
     const pathname = usePathname();
     const router = useRouter();
     const queryClient = useQueryClient();
@@ -121,7 +122,7 @@ export function Navbar() {
                                                 Profile
                                             </Link>
                                             <button
-                                                onClick={() => { setMenuOpen(false); handleSignOut(); }}
+                                                onClick={() => { setMenuOpen(false); setConfirmOpen(true); }}
                                                 className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium text-text-secondary transition-colors hover:bg-base hover:text-text-primary"
                                             >
                                                 <LogOut size={16} />
@@ -219,7 +220,7 @@ export function Navbar() {
                                         </Link>
 
                                         <button
-                                            onClick={() => { setOpen(false); handleSignOut(); }}
+                                            onClick={() => { setOpen(false); setConfirmOpen(true); }}
                                             className="mt-2 flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold text-text-secondary transition-colors hover:bg-surface hover:text-text-primary"
                                         >
                                             <LogOut size={16} />
@@ -255,6 +256,12 @@ export function Navbar() {
                     </motion.div>
                 )}
             </AnimatePresence>
+
+            <ConfirmSignOutModal
+                open={confirmOpen}
+                onCancel={() => setConfirmOpen(false)}
+                onConfirm={handleSignOut}
+            />
         </header>
     );
 }

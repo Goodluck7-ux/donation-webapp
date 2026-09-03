@@ -24,6 +24,7 @@ import { apiFetch } from '@/lib/api';
 import { useProfile } from '@/hooks/userProfile';
 import { Logo } from './Logo';
 import { ThemeToggle } from './ThemeToggle';
+import { ConfirmSignOutModal } from './ConfirmSignOutModal';
 import { useQueryClient } from '@tanstack/react-query';
 import { logActivity } from '@/lib/logger';
 
@@ -69,6 +70,7 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
     const router = useRouter();
     const items = NAV_BY_ROLE[profile?.role ?? 'DONOR'] ?? NAV_BY_ROLE.DONOR;
     const queryClient = useQueryClient();
+    const [confirmOpen, setConfirmOpen] = useState(false);
 
     async function handleSignOut() {
         logActivity('AUTH', 'Sign out initiated', { userId: profile?.id, role: profile?.role });
@@ -141,7 +143,7 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
                 </div>
 
                 <button
-                    onClick={handleSignOut}
+                    onClick={() => setConfirmOpen(true)}
                     className="group mt-5 flex w-full items-center gap-3 rounded-xl px-1 py-2 text-sm font-medium text-[#D3E6D8]/45 transition-colors hover:text-white"
                 >
                     <span className="flex h-8 w-8 items-center justify-center rounded-lg transition-colors group-hover:bg-white/[0.06]">
@@ -152,6 +154,12 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
 
                 <p className="mt-4 px-1 text-[10px] text-[#B7E4C7]/25">© 2026 Finovia Giving</p>
             </div>
+
+            <ConfirmSignOutModal
+                open={confirmOpen}
+                onCancel={() => setConfirmOpen(false)}
+                onConfirm={handleSignOut}
+            />
         </div>
     );
 }
